@@ -2,6 +2,17 @@ from pico2d import *
 
 from Map import Map, width
 
+class King:
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
+
+    def update(self):
+        pass
+
+
 def handle_events():
     global running
     events = get_events()
@@ -18,12 +29,16 @@ def reset_world():
     global running
     global world
     global map
+    global king
 
     running = True
     world = []
 
     map = [Map(i * width) for i in range(11)]
     world += map
+
+    king = King()
+    world.append(king)
 
     pass
 

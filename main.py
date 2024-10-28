@@ -1,11 +1,13 @@
 from pico2d import *
 
+width, height = 254, 64
+
 class Map:
     def __init__(self):
-        self.image = load_image('tiles.png')
+        self.grass_tile = load_image('tiles.png')
 
     def draw(self):
-        self.image.draw(400, 30)
+        self.grass_tile.clip_draw(232, 0, 127, 32, 0, 150, width, height)
 
     def upadate(self):
         pass

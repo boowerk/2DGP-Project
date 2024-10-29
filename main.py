@@ -4,9 +4,13 @@ from Map import Map, width
 
 class King:
     def __init__(self):
+        self.x, self.y = 400, 100
+        self.frame = 8
+        self.image = load_image('king.png')
         pass
 
     def draw(self):
+        self.image.clip_draw(self.frame * 64, 0, 64, 64, self.x, self.y)
         pass
 
     def update(self):

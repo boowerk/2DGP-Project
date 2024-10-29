@@ -14,6 +14,7 @@ class King:
         pass
 
     def update(self):
+        self.frame = (self.frame + 1) % 8
         pass
 
 
@@ -68,5 +69,6 @@ while running:
     handle_events()
     update_world()
     render_world()
+    delay(0.05)
 
 close_canvas

@@ -50,8 +50,8 @@ class Wait:
 
             if king.frame == 10:
                 king.frame_step = -1
-            elif king.frame == 8:
-                king.frame_step = 1
+            elif king.frame == 8 and king.frame_step == -1:  # 애니메이션이 끝나면 Idle 상태로 전환
+                king.state_machine.add_event(('TIME_OUT', 0))
 
             king.frame += king.frame_step
         pass
@@ -107,7 +107,7 @@ class King:
             {
                 Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Wait},
                 Walk: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle},
-                Wait: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk}
+                Wait: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Idle}
             }
         )
 

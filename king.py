@@ -25,6 +25,24 @@ class Idle:
         king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
         pass
 
+class Wait:
+    @staticmethod
+    def enter(king):
+        pass
+
+    @staticmethod
+    def exit(king):
+        pass
+
+    @staticmethod
+    def do(king):
+        pass
+
+    @staticmethod
+    def draw(king):
+        pass
+
+
 class King:
     def __init__(self):
         self.x, self.y = 400, 356

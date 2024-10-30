@@ -1,6 +1,6 @@
 from pico2d import load_image, get_time
 
-from state_machine import StateMachine, time_out
+from state_machine import StateMachine, time_out, right_down, left_up, left_down, right_up
 
 
 class Idle:
@@ -64,24 +64,37 @@ class Wait:
 class Walk:
     @staticmethod
     def enter(king, e):
+        if right_down(e) or left_up(e):
+            king.dir = 1
+        elif left_down(e) or right_up(e):
+            king.dir = -1
+
+        king.frame = 0
         pass
 
     @staticmethod
     def exit(king, e):
+        king.frame = 8
         pass
 
     @staticmethod
     def do(king):
+        king.x += king.dir * 5
+        king.frame = (king.frame + 1) % 8
         pass
 
     @staticmethod
     def draw(king):
+        if king.dir == 1:
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+        elif king.dir == -1:
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
         pass
 
 
 class King:
     def __init__(self):
-        self.x, self.y = 400, 356
+        self.x, self.y = 300, 356
         self.dir = 0
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
@@ -92,8 +105,9 @@ class King:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle: {time_out: Wait}
-
+                Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Wait},
+                Walk: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle},
+                Wait: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk}
             }
         )
 

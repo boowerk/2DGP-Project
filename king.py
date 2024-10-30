@@ -61,6 +61,23 @@ class Wait:
         king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
         pass
 
+class Walk:
+    @staticmethod
+    def enter(king, e):
+        pass
+
+    @staticmethod
+    def exit(king, e):
+        pass
+
+    @staticmethod
+    def do(king):
+        pass
+
+    @staticmethod
+    def draw(king):
+        pass
+
 
 class King:
     def __init__(self):

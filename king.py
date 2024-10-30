@@ -1,5 +1,21 @@
 from pico2d import load_image
 
+class Idle:
+    @staticmethod
+    def enter():
+        pass
+
+    @staticmethod
+    def exit():
+        pass
+
+    @staticmethod
+    def do():
+        pass
+
+    @staticmethod
+    def draw():
+        pass
 
 class King:
     def __init__(self):

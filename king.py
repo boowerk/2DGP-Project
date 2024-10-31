@@ -24,7 +24,11 @@ class Idle:
 
     @staticmethod
     def draw(king):
-        king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+        if king.last_dir == 1:
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+        else:
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
+
         pass
 
 class Wait:
@@ -58,7 +62,10 @@ class Wait:
 
     @staticmethod
     def draw(king):
-        king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+        if king.last_dir == 1:
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+        else:
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
         pass
 
 class Walk:
@@ -69,6 +76,7 @@ class Walk:
         elif left_down(e) or right_up(e):
             king.dir = -1
 
+        king.last_dir = king.dir
         king.frame = 0
         pass
 
@@ -96,6 +104,7 @@ class King:
     def __init__(self):
         self.x, self.y = 300, 356
         self.dir = 0
+        self.last_dir = 1
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 0.1  # 프레임 전환 간격

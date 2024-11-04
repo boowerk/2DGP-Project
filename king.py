@@ -110,6 +110,7 @@ class King:
         self.frame_delay = 0.1  # 프레임 전환 간격
         self.image = load_image('king.png')
 
+        self.camera_x = 0
         self.state_machine = StateMachine(self)
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
@@ -126,6 +127,11 @@ class King:
 
     def update(self):
         self.state_machine.update()
+        if self.x > 400:
+            self.camera_x = self.x - 400
+        else:
+            self.camera_x = 0
+
         pass
 
     def handle_event(self, event):

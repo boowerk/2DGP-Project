@@ -28,11 +28,12 @@ def reset_world():
     running = True
     world = []
 
-    map = [Map(i * width) for i in range(11)]
-    world += map
 
     king = King()
     world.append(king)
+
+    map = [Map(i * width, king) for i in range(11)]
+    world += map
 
     pass
 

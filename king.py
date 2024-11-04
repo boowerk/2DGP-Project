@@ -87,9 +87,11 @@ class Walk:
 
     @staticmethod
     def do(king):
-
-        if king.x > 400:
-            king.camera_x = king.x - 400
+        if king.x > 600 + king.camera_x:
+            king.camera_x = king.x - 600
+            king.x += king.dir * 5
+        elif king.x < 250 + king.camera_x:
+            king.camera_x = king.x - 250
             king.x += king.dir * 5
         else:
             king.x += king.dir * 5

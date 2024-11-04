@@ -25,9 +25,9 @@ class Idle:
     @staticmethod
     def draw(king):
         if king.last_dir == 1:
-            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x - king.camera_x, king.y, 192, 192)
         else:
-            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x - king.camera_x, king.y, 192, 192)
 
         pass
 
@@ -63,9 +63,9 @@ class Wait:
     @staticmethod
     def draw(king):
         if king.last_dir == 1:
-            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x - king.camera_x, king.y, 192, 192)
         else:
-            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x - king.camera_x, king.y, 192, 192)
         pass
 
 class Walk:
@@ -87,16 +87,21 @@ class Walk:
 
     @staticmethod
     def do(king):
-        king.x += king.dir * 5
+
+        if king.x > 400:
+            king.camera_x = king.x - 400
+            king.x += king.dir * 5
+        else:
+            king.x += king.dir * 5
         king.frame = (king.frame + 1) % 8
         pass
 
     @staticmethod
     def draw(king):
         if king.dir == 1:
-            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x, king.y, 192, 192)
+            king.image.clip_draw(king.frame * 64, 0, 64, 64, king.x - king.camera_x, king.y, 192, 192)
         elif king.dir == -1:
-            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x, king.y, 192, 192)
+            king.image.clip_composite_draw(king.frame * 64, 0, 64, 64, 0, 'h', king.x - king.camera_x, king.y, 192, 192)
         pass
 
 
@@ -127,11 +132,8 @@ class King:
 
     def update(self):
         self.state_machine.update()
-        if self.x > 400:
-            self.camera_x = self.x - 400
-        else:
-            self.camera_x = 0
 
+        print(f'king.x = {self.x}')
         pass
 
     def handle_event(self, event):

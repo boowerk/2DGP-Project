@@ -2,6 +2,7 @@ from pico2d import *
 import game_framework
 from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
+import game_world
 from king import King
 from map import Map, width
 
@@ -18,17 +19,30 @@ def handle_events():
             if event.type in (SDL_KEYDOWN, SDL_KEYUP):
                 king.handle_event(event)
 
-    pass
-
 def init():
     global king
 
     world = []
 
     king = King()
-    world.append(king)
+    game_world.add_object(king, 0)
 
     map = [Map(i * width, king) for i in range(11)]
-    world += map
+    game_world.add_objects(map, 0)
 
+def finish():
+    game_world.clear()
+
+def update():
+    game_world.update()
+
+def draw():
+    clear_canvas()
+    game_world.render()
+    update_canvas()
+
+def pause():
+    pass
+
+def resume():
     pass

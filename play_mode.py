@@ -1,6 +1,7 @@
 from pico2d import *
 from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
+import game_framework
 import game_world
 from king import King
 from map import Map, width
@@ -11,9 +12,9 @@ def handle_events():
 
     for event in events:
         if event.type == SDL_QUIT:
-            running = False
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            game_framework.quit()
         else:
             if event.type in (SDL_KEYDOWN, SDL_KEYUP):
                 king.handle_event(event)

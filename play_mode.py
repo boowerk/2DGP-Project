@@ -1,12 +1,14 @@
 from pico2d import *
+import game_framework
+from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
-from map import Map, width
 from king import King
+from map import Map, width
+
 
 def handle_events():
-    global running
     events = get_events()
-    
+
     for event in events:
         if event.type == SDL_QUIT:
             running = False
@@ -18,15 +20,10 @@ def handle_events():
 
     pass
 
-def reset_world():
-    global running
-    global world
-    global map
+def init():
     global king
 
-    running = True
     world = []
-
 
     king = King()
     world.append(king)
@@ -35,29 +32,3 @@ def reset_world():
     world += map
 
     pass
-
-def update_world():
-    for o in world:
-        o.update()
-    pass
-
-def render_world():
-    clear_canvas()
-    for o in world:
-        o.draw()
-    update_canvas()
-
-
-open_canvas()
-
-# initialization code
-reset_world()
-
-while running:
-    #game logic
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.05)
-
-close_canvas

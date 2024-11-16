@@ -1,7 +1,14 @@
 from pico2d import load_image, get_time
 
+import game_framework
 from state_machine import StateMachine, time_out, right_down, left_up, left_down, right_up
 
+# King Run Speed
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class Idle:
     @staticmethod
@@ -78,6 +85,8 @@ class Walk:
 
         king.last_dir = king.dir
         king.frame = 0
+        king.frame_step = 1
+        king.frame_timer = 0
         pass
 
     @staticmethod
@@ -89,13 +98,18 @@ class Walk:
     def do(king):
         if king.x > 600 + king.camera_x:
             king.camera_x = king.x - 600
-            king.x += king.dir * 5
+            king.x += king.dir * RUN_SPEED_PPS * game_framework.frame_time
         elif king.x < 250 + king.camera_x:
             king.camera_x = king.x - 250
-            king.x += king.dir * 5
+            king.x += king.dir * RUN_SPEED_PPS * game_framework.frame_time
         else:
-            king.x += king.dir * 5
-        king.frame = (king.frame + 1) % 8
+            king.x += king.dir * RUN_SPEED_PPS * game_framework.frame_time
+
+        # 프레임 속도 조절
+        king.frame_timer += game_framework.frame_time
+        if king.frame_timer >= 0.1:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
+            king.frame = (king.frame + 1) % 8
+            king.frame_timer = 0.0  # 타이머 리셋
         pass
 
     @staticmethod
@@ -114,7 +128,7 @@ class King:
         self.last_dir = 1
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
-        self.frame_delay = 0.1  # 프레임 전환 간격
+        self.frame_delay = 2.0  # 프레임 전환 간격
         self.image = load_image('king.png')
 
         self.camera_x = 0
@@ -135,7 +149,7 @@ class King:
     def update(self):
         self.state_machine.update()
 
-        print(f'king.x = {self.x}')
+        # print(f'king.x = {self.x}')
         pass
 
     def handle_event(self, event):

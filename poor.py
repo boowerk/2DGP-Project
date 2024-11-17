@@ -2,6 +2,56 @@ from pico2d import load_image
 
 import game_framework
 
+class Idle:
+    @staticmethod
+    def enter(poor, e):
+        pass
+
+    @staticmethod
+    def exit(poor, e):
+        pass
+
+    @staticmethod
+    def do(poor):
+        pass
+
+    @staticmethod
+    def draw(poor):
+        pass
+
+class Wait:
+    @staticmethod
+    def enter(poor, e):
+        pass
+
+    @staticmethod
+    def exit(poor, e):
+        pass
+
+    @staticmethod
+    def do(poor):
+        pass
+
+    @staticmethod
+    def draw(poor):
+        pass
+
+class Walk:
+    @staticmethod
+    def enter(poor, e):
+        pass
+
+    @staticmethod
+    def exit(poor, e):
+        pass
+
+    @staticmethod
+    def do(poor):
+        pass
+
+    @staticmethod
+    def draw(poor):
+        pass
 
 class Poor:
     def __init__(self):

@@ -12,7 +12,7 @@ class Coin:
         pass
 
     def draw(self):
-        self.image.clip_draw(self.frame * 10, 0, 10, 10, self.x, self.y)
+        self.image.clip_draw(self.frame * 10, 0, 10, 10, self.x, self.y, 20, 20)
         pass
 
     def update(self):

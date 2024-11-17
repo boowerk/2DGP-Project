@@ -31,8 +31,7 @@ def init():
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
 
-    coin = Coin(king.x, king.y)
-    game_world.add_object(coin, 1)
+
 
 def finish():
     game_world.clear()

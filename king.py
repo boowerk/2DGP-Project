@@ -1,7 +1,9 @@
 from pico2d import load_image, get_time
 
 import game_framework
-from state_machine import StateMachine, time_out, right_down, left_up, left_down, right_up
+import game_world
+from coin import Coin
+from state_machine import StateMachine, time_out, right_down, left_up, left_down, right_up, space_down
 
 # King Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -21,6 +23,8 @@ class Idle:
 
     @staticmethod
     def exit(king, e):
+        if space_down(e):
+            king.drop_coin()
         pass
 
     @staticmethod
@@ -50,6 +54,9 @@ class Wait:
     def exit(king, e):
         king.frame = 8
         king.frame_step = 1
+
+        if space_down(e):
+            king.drop_coin()
         pass
 
     @staticmethod
@@ -92,6 +99,8 @@ class Walk:
     @staticmethod
     def exit(king, e):
         king.frame = 8
+        if space_down(e):
+            king.drop_coin()
         pass
 
     @staticmethod
@@ -126,6 +135,7 @@ class King:
         self.x, self.y = 300, 356
         self.dir = 0
         self.last_dir = 1
+        self.coin_count = 10
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 2.0  # 프레임 전환 간격
@@ -136,9 +146,9 @@ class King:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Wait},
-                Walk: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle},
-                Wait: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Idle}
+                Idle: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Wait, space_down: Idle},
+                Walk: {right_down: Idle, left_down: Idle, left_up: Idle, right_up: Idle, space_down: Walk},
+                Wait: {right_down: Walk, left_down: Walk, left_up: Walk, right_up: Walk, time_out: Idle, space_down: Idle}
             }
         )
 
@@ -151,6 +161,12 @@ class King:
 
         # print(f'king.x = {self.x}')
         pass
+
+    def drop_coin(self):
+        if self.coin_count > 0:
+            self.coin_count -= 1
+            coin = Coin(self.x , self.y)
+            game_world.add_object(coin, 1)
 
     def handle_event(self, event):
         self.state_machine.add_event(

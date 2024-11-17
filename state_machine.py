@@ -6,6 +6,9 @@ from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_SPACE
 def start_evnet(e):
     return e[0] == 'START'
 
+def random_event(e):
+    return e[0] == 'RANDOM'
+
 def time_out(e):
     return e[0] == 'TIME_OUT'
 

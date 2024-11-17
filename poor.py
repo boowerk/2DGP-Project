@@ -13,12 +13,12 @@ class Poor:
         self.walk_image = load_image('npc_walk_sprite.png')
 
     def draw(self):
-        self.wait_image.clip_draw(self.frame * 128, 128, 128, 128, self.x, self.y)
+        self.wait_image.clip_draw(self.frame * 128, 128, 128, 128, self.x, self.y, 100, 100)
         pass
 
     def update(self):
         self.frame_timer += game_framework.frame_time
-        if self.frame_timer >= 0.1:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
-            self.frame = (self.frame + 1) % 6 + 6
+        if self.frame_timer >= 0.2:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
+            self.frame = (self.frame + 6) % 36
             self.frame_timer = 0.0  # 타이머 리셋
         pass

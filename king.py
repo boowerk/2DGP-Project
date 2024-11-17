@@ -165,7 +165,7 @@ class King:
     def drop_coin(self):
         if self.coin_count > 0:
             self.coin_count -= 1
-            coin = Coin(self.x , self.y)
+            coin = Coin(self.x, self.y - 80, self)
             game_world.add_object(coin, 1)
 
     def handle_event(self, event):

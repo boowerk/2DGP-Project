@@ -6,6 +6,7 @@ import game_world
 from coin import Coin
 from king import King
 from map import Map, width
+from poor import Poor
 
 
 def handle_events():
@@ -31,6 +32,8 @@ def init():
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
 
+    poor = Poor()
+    game_world.add_object(poor, 0)
 
 
 def finish():

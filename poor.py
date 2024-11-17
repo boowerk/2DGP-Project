@@ -36,7 +36,10 @@ class Idle:
 
     @staticmethod
     def draw(poor):
-        poor.wait_image.clip_draw(poor.frame * 128, 128, 128, 128, poor.x, poor.y, 100, 100)
+        if poor.last_dir == 1:  # 마지막 방향이 오른쪽일 때
+            poor.wait_image.clip_draw(poor.frame * 128, 128, 128, 128, poor.x, poor.y, 100, 100)
+        elif poor.last_dir == -1:  # 마지막 방향이 왼쪽일 때
+            poor.wait_image.clip_composite_draw(poor.frame * 128, 128, 128, 128, 0, 'h', poor.x, poor.y, 100, 100)
         pass
 
 class Wait:
@@ -75,7 +78,11 @@ class Wait:
 
     @staticmethod
     def draw(poor):
-        poor.wait_image.clip_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, poor.x, poor.y, 100, 100)
+        if poor.last_dir == 1:  # 마지막 방향이 오른쪽일 때
+            poor.wait_image.clip_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, poor.x, poor.y, 100, 100)
+        elif poor.last_dir == -1:  # 마지막 방향이 왼쪽일 때
+            poor.wait_image.clip_composite_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, 0, 'h', poor.x,
+                                                poor.y, 100, 100)
         pass
 
 class Walk:
@@ -87,7 +94,7 @@ class Walk:
 
     @staticmethod
     def exit(poor, e):
-        poor.dir = 0
+        poor.last_dir = poor.dir
         pass
 
     @staticmethod
@@ -122,9 +129,9 @@ class Poor:
     def __init__(self):
         self.x, self.y = 400, 315
         self.dir = 0
+        self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
-        self.last_dir = 1
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')

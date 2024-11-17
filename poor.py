@@ -84,7 +84,7 @@ class Walk:
 
 class Poor:
     def __init__(self):
-        self.x, self.y = 400, 356
+        self.x, self.y = 400, 315
         self.dir = 0
         self.frame = 0
         self.frame_timer = 0

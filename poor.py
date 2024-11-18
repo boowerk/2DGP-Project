@@ -5,7 +5,8 @@ from pico2d import load_image, get_time
 import game_framework
 import game_world
 from coin import Coin
-from state_machine import StateMachine, time_out, random_event, find_coin_event
+from game_world import remove_object
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
 
 # Poor Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -155,8 +156,10 @@ class Run:
             poor.dir = 1 if nearest_coin.x > poor.x else -1
 
             if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
-                poor.state_machine.add_event(('RANDOM', 0))
+                remove_object(nearest_coin)
                 return
+        else:
+            poor.state_machine.add_event(('MISS', 0))
 
         poor.x += poor.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -204,7 +207,7 @@ class Poor:
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle},
                 Walk: {random_event: Wait, find_coin_event: Run},
-                Run : {}
+                Run : {miss_event: Idle}
             }
         )
 

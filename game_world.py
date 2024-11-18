@@ -30,7 +30,13 @@ def find_objects(obj_type):
     return result
 
 def remove_object(o):
-    pass
+    for layer in world:
+        if o in layer:
+            layer.remove(o)
+            remove_collision_object(o)
+            del o
+            return
+    raise ValueError('Cannot delete non existing object')
 
 def clear():
     for layer in world:

@@ -174,8 +174,8 @@ class Run:
         pass
 
 class Citizen:
-    def __init__(self, king):
-        self.x, self.y = 500, 315
+    def __init__(self, x, y, king):
+        self.x, self.y = x, y
         self.dir = 0
         self.last_dir = 1
         self.frame = 0

@@ -33,9 +33,6 @@ def init():
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
 
-    citizen = Citizen(king)
-    game_world.add_object(citizen, 0)
-
     poor = [Poor(king) for i in range(2)]
     game_world.add_objects(poor, 0)
 

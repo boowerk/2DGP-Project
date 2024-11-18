@@ -23,6 +23,12 @@ def render():
         for o in layer:
             o.draw()
 
+def find_objects(obj_type):
+    result = []
+    for layer in world:
+        result += [obj for obj in layer if isinstance(obj, obj_type)]
+    return result
+
 def remove_object(o):
     pass
 

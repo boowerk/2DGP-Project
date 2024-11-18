@@ -5,7 +5,7 @@ from pico2d import load_image, get_time
 import game_framework
 import game_world
 from coin import Coin
-from state_machine import StateMachine, time_out, random_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event
 
 # Poor Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -106,12 +106,7 @@ class Walk:
         # 근처 동전 찾기
         coins = game_world.find_objects(Coin)
         if coins:
-            nearest_coin = min(coins, key=lambda c: abs(c.x - poor.x))
-            poor.dir = 1 if nearest_coin.x > poor.x else -1
-
-            if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
-                poor.state_machine.add_event(('RANDOM', 0))
-                return
+            poor.state_machine.add_event(('FIND_COIN', 0))
 
         poor.x += poor.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -140,6 +135,57 @@ class Walk:
             poor.walk_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h',poor.x - adjusted_x, poor.y, 100, 100)
         pass
 
+class Run:
+    @staticmethod
+    def enter(poor, e):
+        poor.frame = 0
+        pass
+
+    @staticmethod
+    def exit(poor, e):
+        poor.last_dir = poor.dir
+        pass
+
+    @staticmethod
+    def do(poor):
+        # 근처 동전 찾기
+        coins = game_world.find_objects(Coin)
+        if coins:
+            nearest_coin = min(coins, key=lambda c: abs(c.x - poor.x))
+            poor.dir = 1 if nearest_coin.x > poor.x else -1
+
+            if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
+                poor.state_machine.add_event(('RANDOM', 0))
+                return
+
+        poor.x += poor.dir * RUN_SPEED_PPS * game_framework.frame_time
+
+        poor.frame_timer += game_framework.frame_time
+        if poor.frame_timer >= 0.1:
+            poor.frame = (poor.frame + 6) % 36
+            poor.frame_timer = 0
+
+        if poor.x < 50:  # 화면 왼쪽 경계
+            poor.x = 50
+            poor.dir = 1
+        elif poor.x > 750:  # 화면 오른쪽 경계
+            poor.x = 750
+            poor.dir = -1
+
+        if random.random() < 0.001:
+            poor.state_machine.add_event(('RANDOM', 0))
+        pass
+
+    @staticmethod
+    def draw(poor):
+        adjusted_x = poor.king.get_camera_x()
+        if poor.dir == 1:
+            poor.walk_image.clip_draw(poor.frame * 128, 0, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
+        elif poor.dir == -1:
+            poor.walk_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h', poor.x - adjusted_x, poor.y, 100,
+                                                100)
+        pass
+
 class Poor:
     def __init__(self, king):
         self.x, self.y = 400, 315
@@ -157,7 +203,8 @@ class Poor:
             {
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle},
-                Walk: {random_event: Wait}
+                Walk: {random_event: Wait, find_coin_event: Run},
+                Run : {}
             }
         )
 

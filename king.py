@@ -172,3 +172,6 @@ class King:
         self.state_machine.add_event(
             ('INPUT', event)
         )
+
+    def get_camera_x(self):
+        return self.camera_x

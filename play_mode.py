@@ -32,7 +32,7 @@ def init():
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
 
-    poor = Poor()
+    poor = Poor(king)
     game_world.add_object(poor, 0)
 
 

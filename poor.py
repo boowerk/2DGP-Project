@@ -3,6 +3,7 @@ import random
 from pico2d import load_image, get_time
 
 import game_framework
+import king
 from state_machine import StateMachine, time_out, random_event
 
 # Poor Run Speed
@@ -36,10 +37,11 @@ class Idle:
 
     @staticmethod
     def draw(poor):
+        adjusted_x = poor.king.get_camera_x()
         if poor.last_dir == 1:  # 마지막 방향이 오른쪽일 때
-            poor.wait_image.clip_draw(poor.frame * 128, 128, 128, 128, poor.x, poor.y, 100, 100)
+            poor.wait_image.clip_draw(poor.frame * 128, 128, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
         elif poor.last_dir == -1:  # 마지막 방향이 왼쪽일 때
-            poor.wait_image.clip_composite_draw(poor.frame * 128, 128, 128, 128, 0, 'h', poor.x, poor.y, 100, 100)
+            poor.wait_image.clip_composite_draw(poor.frame * 128, 128, 128, 128, 0, 'h', poor.x - adjusted_x, poor.y, 100, 100)
         pass
 
 class Wait:
@@ -78,10 +80,11 @@ class Wait:
 
     @staticmethod
     def draw(poor):
+        adjusted_x = poor.king.get_camera_x()
         if poor.last_dir == 1:  # 마지막 방향이 오른쪽일 때
-            poor.wait_image.clip_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, poor.x, poor.y, 100, 100)
+            poor.wait_image.clip_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
         elif poor.last_dir == -1:  # 마지막 방향이 왼쪽일 때
-            poor.wait_image.clip_composite_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, 0, 'h', poor.x,
+            poor.wait_image.clip_composite_draw(poor.frame * 128, poor.frame_col * 128, 128, 128, 0, 'h', poor.x - adjusted_x,
                                                 poor.y, 100, 100)
         pass
 
@@ -119,19 +122,21 @@ class Walk:
 
     @staticmethod
     def draw(poor):
+        adjusted_x = poor.king.get_camera_x()
         if poor.dir == 1:
-            poor.walk_image.clip_draw(poor.frame * 128, 0, 128, 128, poor.x, poor.y, 100, 100)
+            poor.walk_image.clip_draw(poor.frame * 128, 0, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
         elif poor.dir == -1:
-            poor.walk_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h',poor.x, poor.y, 100, 100)
+            poor.walk_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h',poor.x - adjusted_x, poor.y, 100, 100)
         pass
 
 class Poor:
-    def __init__(self):
+    def __init__(self, king):
         self.x, self.y = 400, 315
         self.dir = 0
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
+        self.king = king
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')

@@ -3,7 +3,8 @@ import random
 from pico2d import load_image, get_time
 
 import game_framework
-import king
+import game_world
+from coin import Coin
 from state_machine import StateMachine, time_out, random_event
 
 # Poor Run Speed
@@ -102,6 +103,16 @@ class Walk:
 
     @staticmethod
     def do(poor):
+        # 근처 동전 찾기
+        coins = game_world.find_objects(Coin)
+        if coins:
+            nearest_coin = min(coins, key=lambda c: abs(c.x - poor.x))
+            poor.dir = 1 if nearest_coin.x > poor.x else -1
+
+            if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
+                poor.state_machine.add_event(('RANDOM', 0))
+                return
+
         poor.x += poor.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         poor.frame_timer += game_framework.frame_time

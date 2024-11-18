@@ -3,6 +3,7 @@ from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework
 import game_world
+from citizen import Citizen
 from coin import Coin
 from king import King
 from map import Map, width
@@ -31,6 +32,9 @@ def init():
 
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
+
+    citizen = Citizen(king)
+    game_world.add_object(citizen, 0)
 
     poor = [Poor(king) for i in range(2)]
     game_world.add_objects(poor, 0)

@@ -8,7 +8,7 @@ from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
 
-# Poor Run Speed
+# Citizen Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -19,7 +19,7 @@ class Idle:
     @staticmethod
     def enter(citizen, e):
         citizen.dir = 0    # 정지상태
-        citizen.frame = 0
+        citizen.frame = 1
 
         citizen.start_time = get_time()
         pass
@@ -49,7 +49,7 @@ class Idle:
 class Wait:
     @staticmethod
     def enter(citizen, e):
-        citizen.frame = 0
+        citizen.frame = 1
         citizen.frame_col = 1
         citizen.once = False
 
@@ -67,16 +67,16 @@ class Wait:
             citizen.frame = (citizen.frame + 6) % 36
             citizen.frame_timer = 0.0  # 타이머 리셋
 
-            if citizen.frame == 30:
+            if citizen.frame == 31:
                 citizen.frame_col = 0
-                citizen.frame = 0
+                citizen.frame = 1
                 citizen.once = True
 
         elif citizen.frame_timer >= 0.3 and citizen.once == True:
             citizen.frame = (citizen.frame + 6) % 18
             citizen.frame_timer = 0.0  # 타이머 리셋
 
-            if citizen.frame == 12:
+            if citizen.frame == 13:
                 citizen.state_machine.add_event(('TIME_OUT', 0))
         pass
 
@@ -94,7 +94,7 @@ class Walk:
     @staticmethod
     def enter(citizen, e):
         citizen.dir = random.choice([-1, 1])
-        citizen.frame = 0
+        citizen.frame = 1
         pass
 
     @staticmethod
@@ -104,10 +104,6 @@ class Walk:
 
     @staticmethod
     def do(citizen):
-        # 근처 동전 찾기
-        coins = game_world.find_objects(Coin)
-        if coins:
-            citizen.state_machine.add_event(('FIND_COIN', 0))
 
         citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -139,7 +135,7 @@ class Walk:
 class Run:
     @staticmethod
     def enter(citizen, e):
-        citizen.frame = 0
+        citizen.frame = 1
         pass
 
     @staticmethod
@@ -149,18 +145,6 @@ class Run:
 
     @staticmethod
     def do(citizen):
-        # 근처 동전 찾기
-        coins = game_world.find_objects(Coin)
-        if coins:
-            nearest_coin = min(coins, key=lambda c: abs(c.x - citizen.x))
-            citizen.dir = 1 if nearest_coin.x > citizen.x else -1
-
-            if abs(nearest_coin.x - citizen.x) < 5:  # 동전에 가까워지면 멈춤
-                remove_object(nearest_coin)
-                return
-        else:
-            citizen.state_machine.add_event(('MISS', 0))
-
         citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         citizen.frame_timer += game_framework.frame_time
@@ -191,7 +175,7 @@ class Run:
 
 class Citizen:
     def __init__(self, king):
-        self.x, self.y = 400, 315
+        self.x, self.y = 500, 315
         self.dir = 0
         self.last_dir = 1
         self.frame = 0

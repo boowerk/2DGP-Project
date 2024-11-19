@@ -6,6 +6,7 @@ import game_world
 from citizen import Citizen
 from coin import Coin
 from king import King
+from kingdom import Kingdom
 from map import Map, width
 from poor import Poor
 
@@ -35,6 +36,9 @@ def init():
 
     poor = [Poor(king) for i in range(2)]
     game_world.add_objects(poor, 0)
+
+    kingdom = Kingdom(king)
+    game_world.add_object(kingdom, 0)
 
 
 def finish():

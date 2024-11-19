@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, load_font
 
 import game_framework
 import game_world
@@ -140,7 +140,7 @@ class King:
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 2.0  # 프레임 전환 간격
         self.image = load_image('king.png')
-
+        self.font = load_font('ENCR10B.TTF', 16)
         self.camera_x = 0
         self.state_machine = StateMachine(self)
         self.state_machine.start(Idle)
@@ -154,6 +154,7 @@ class King:
 
     def draw(self):
         self.state_machine.draw()
+        self.font.draw(self.x - self.camera_x, self.y + 50, f'{self.x}', (255, 255, 0))
         pass
 
     def update(self):

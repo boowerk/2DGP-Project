@@ -61,7 +61,7 @@ def collide(a, b):
     if bottom_a > top_b: return False
     return True
 
-def handle_collision():
+def handle_collisions():
     for group, pairs in collision_pairs.items():
         for a in pairs[0]:
             for b in pairs[1]:

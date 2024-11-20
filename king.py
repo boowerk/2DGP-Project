@@ -1,4 +1,5 @@
 from pico2d import load_image, get_time, load_font, draw_rectangle
+from sdl2.examples.gfxdrawing import draw_circles
 
 import game_framework
 import game_world
@@ -180,3 +181,7 @@ class King:
 
     def get_bb (self):
         return self.x - self.camera_x - 50, self.y - 80, self.x - self.camera_x + 50, self.y
+
+    def handle_collision(self, group, other):
+        if group == 'king:kingdom':
+            print('king:kingdom')

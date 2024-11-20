@@ -23,5 +23,9 @@ class Kingdom:
     def get_bb(self):
         return self.x - self.king.camera_x - 50, self.y - 60, self.x - self.king.camera_x + 50, self.y
 
+    def handle_collision(self, group, other):
+        if group == 'king:kingdom':
+            print('King:kingdom')
+
     def update(self):
         pass

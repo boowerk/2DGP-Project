@@ -29,13 +29,13 @@ def init():
     world = []
 
     king = King()
-    game_world.add_object(king, 0)
+    game_world.add_object(king, 1)
 
     map = [Map(i * width, king) for i in range(11)]
     game_world.add_objects(map, 0)
 
     poor = [Poor(king) for i in range(2)]
-    game_world.add_objects(poor, 0)
+    game_world.add_objects(poor, 1)
 
     kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)

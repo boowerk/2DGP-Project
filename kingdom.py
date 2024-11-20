@@ -30,7 +30,7 @@ class Kingdom:
     def handle_collision(self, group, other):
         if group == 'king:kingdom':
             if self.kingdom_level == 0 and not self.coin_spawned:
-                coin = Coin(1600, 500, other)
+                coin = Coin(1600, 500, other, 0.5)
                 game_world.add_object(coin, 1)
                 self.coin_spawned = True
 

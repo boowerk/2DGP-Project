@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import load_image, draw_rectangle
 
 
 class Kingdom:
@@ -15,9 +15,13 @@ class Kingdom:
         pass
 
     def draw(self):
+        draw_rectangle(*self.get_bb())
         if self.kingdom_level == 0:
             self.level0_kingdom.draw(self.x - self.king.camera_x, self.y)
         pass
+
+    def get_bb(self):
+        return self.x - self.king.camera_x - 50, self.y - 60, self.x - self.king.camera_x + 50, self.y
 
     def update(self):
         pass

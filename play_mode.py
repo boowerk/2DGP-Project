@@ -5,6 +5,7 @@ import game_framework
 import game_world
 from citizen import Citizen
 from coin import Coin
+from game_world import add_collision_pair
 from king import King
 from kingdom import Kingdom
 from map import Map, width
@@ -26,8 +27,6 @@ def handle_events():
 def init():
     global king
 
-    world = []
-
     king = King()
     game_world.add_object(king, 1)
 
@@ -39,6 +38,9 @@ def init():
 
     kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)
+
+    # 충돌 대상 등록
+    add_collision_pair('king:kingdom', king, kingdom)
 
 
 def finish():

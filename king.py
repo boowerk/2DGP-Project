@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, load_font
+from pico2d import load_image, get_time, load_font, draw_rectangle
 
 import game_framework
 import game_world
@@ -155,6 +155,7 @@ class King:
     def draw(self):
         self.state_machine.draw()
         self.font.draw(self.x - self.camera_x, self.y + 50, f'{self.x}', (255, 255, 0))
+        draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -176,3 +177,6 @@ class King:
 
     def get_camera_x(self):
         return self.camera_x
+
+    def get_bb (self):
+        return self.x - self.camera_x - 50, self.y - 80, self.x - self.camera_x + 50, self.y

@@ -106,7 +106,7 @@ class Walk:
     @staticmethod
     def do(poor):
         # 근처 동전 찾기
-        coins = game_world.find_objects(Coin)
+        coins = [coin for coin in game_world.find_objects(Coin) if coin.y < 400]
         if coins:
             poor.state_machine.add_event(('FIND_COIN', 0))
 
@@ -151,7 +151,7 @@ class Run:
     @staticmethod
     def do(poor):
         # 근처 동전 찾기
-        coins = game_world.find_objects(Coin)
+        coins = [coin for coin in game_world.find_objects(Coin) if coin.y < 400]
         if coins:
             nearest_coin = min(coins, key=lambda c: abs(c.x - poor.x))
             poor.dir = 1 if nearest_coin.x > poor.x else -1

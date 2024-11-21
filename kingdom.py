@@ -10,6 +10,7 @@ class Kingdom:
         self.king = king
         self.kingdom_level = 0
         self.coin_spawned = False
+        self.coin = None
         self.level0_kingdom = load_image("level0_base.png")
         self.level1_kingdom = load_image("level1_base.png")
         self.level2_kingdom = load_image("level2_base.png")
@@ -30,9 +31,16 @@ class Kingdom:
     def handle_collision(self, group, other):
         if group == 'king:kingdom':
             if self.kingdom_level == 0 and not self.coin_spawned:
-                coin = Coin(1600, 500, other, 0.5)
-                game_world.add_object(coin, 1)
+                self.coin = Coin(1600, 500, other, 0.5)
+                game_world.add_object(self.coin, 1)
                 self.coin_spawned = True
+        else:
+            self.coin_spawned = False
+
 
     def update(self):
+        if self.coin_spawned and self.coin is not None:
+            game_world.remove_object(self.coin)  # 게임 월드에서 코인 제거
+            self.coin = None  # 참조 제거
+            self.coin_spawned = False
         pass

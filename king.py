@@ -142,6 +142,7 @@ class King:
         self.frame_delay = 2.0  # 프레임 전환 간격
         self.image = load_image('king.png')
         self.font = load_font('ENCR10B.TTF', 16)
+        self.is_kingdom = False # 왕국에 있는가?
         self.camera_x = 0
         self.state_machine = StateMachine(self)
         self.state_machine.start(Idle)
@@ -161,7 +162,6 @@ class King:
 
     def update(self):
         self.state_machine.update()
-
         # print(f'king.x = {self.x}')
         pass
 

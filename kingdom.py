@@ -28,18 +28,25 @@ class Kingdom:
     def get_bb(self):
         return self.x - self.king.camera_x - 50, self.y - 60, self.x - self.king.camera_x + 50, self.y
 
+    @staticmethod
+    def check_collision(bb1, bb2):
+        # 충돌 여부를 확인하는 함수
+        left1, bottom1, right1, top1 = bb1
+        left2, bottom2, right2, top2 = bb2
+        return not (right1 < left2 or left1 > right2 or top1 < bottom2 or bottom1 > top2)
+
     def count_coins_in_area(self):
-        # 현재 충돌 영역 내의 코인 개수를 셈
-        left, bottom, right, top = self.get_bb()
+        # 현재 충돌 범위에 있는 모든 Coin 객체를 반환
         coins = game_world.find_objects(Coin)
-        count = 0
+        my_bb = self.get_bb()
+        coins_in_area = []
 
         for coin in coins:
-            coin_left, coin_bottom, coin_right, coin_top = coin.get_bb()
-            if coin_left < right and coin_right > left and coin_bottom < top and coin_top > bottom:
-                count += 1
+            coin_bb = coin.get_bb()
+            if self.check_collision(my_bb, coin_bb):
+                coins_in_area.append(coin)
 
-        return count
+        return coins_in_area
 
     def handle_collision(self, group, other):
         if group == 'king:kingdom':
@@ -52,9 +59,16 @@ class Kingdom:
 
 
     def update(self):
-        # 충돌 영역 내 코인 개수를 출력
-        coin_count = self.count_coins_in_area()
-        print(f'Coins in area: {coin_count}')
+        # 충돌 영역 내 코인 리스트 가져오기
+        coins_in_area = self.count_coins_in_area()
+
+        if len(coins_in_area) == 1 and self.kingdom_level == 0:
+            self.kingdom_level += 1
+            # 충돌 영역 내 코인을 모두 삭제
+            for coin in coins_in_area:
+                game_world.remove_object(coin)
+
+        print(f'Coins in area: {len(coins_in_area)}')
 
         if self.coin_spawned and self.coin is not None:
             game_world.remove_object(self.coin)  # 게임 월드에서 코인 제거

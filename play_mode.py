@@ -11,6 +11,7 @@ from kingdom import Kingdom
 from map import Map, width
 from poor import Poor
 from shop_hammer import Shop_hammer
+from worker import Worker
 
 
 def handle_events():
@@ -42,6 +43,9 @@ def init():
 
     shop_hammer = Shop_hammer(king)
     game_world.add_object(shop_hammer)
+
+    worker = Worker(1600, 315, king)
+    game_world.add_object(worker)
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)

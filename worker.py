@@ -19,7 +19,7 @@ class Idle:
     @staticmethod
     def enter(worker, e):
         worker.dir = 0    # 정지상태
-        worker.frame = 1
+        worker.frame = 3
 
         worker.start_time = get_time()
         pass
@@ -49,7 +49,7 @@ class Idle:
 class Wait:
     @staticmethod
     def enter(worker, e):
-        worker.frame = 1
+        worker.frame = 3
         worker.frame_col = 1
         worker.once = False
 
@@ -67,16 +67,16 @@ class Wait:
             worker.frame = (worker.frame + 6) % 36
             worker.frame_timer = 0.0  # 타이머 리셋
 
-            if worker.frame == 31:
+            if worker.frame == 33:
                 worker.frame_col = 0
-                worker.frame = 1
+                worker.frame = 3
                 worker.once = True
 
         elif worker.frame_timer >= 0.3 and worker.once == True:
             worker.frame = (worker.frame + 6) % 18
             worker.frame_timer = 0.0  # 타이머 리셋
 
-            if worker.frame == 13:
+            if worker.frame == 15:
                 worker.state_machine.add_event(('TIME_OUT', 0))
         pass
 
@@ -94,7 +94,7 @@ class Walk:
     @staticmethod
     def enter(worker, e):
         worker.dir = random.choice([-1, 1])
-        worker.frame = 1
+        worker.frame = 3
         pass
 
     @staticmethod

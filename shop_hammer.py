@@ -8,18 +8,23 @@ class Shop_hammer:
     def __init__(self, king):
         self.king = king
         self.x, self.y = 1100, 350
+        self.tool_x, self.tool_y = 975, 280
         self.image = load_image("shop_hammer.png")
+        self.tool_hammer = load_image("tools_hammer.png")
         self.coin_spawned = False
         self.coin = None
+        self.tool_count = 0
 
     def draw(self):
         self.image.draw(self.x - self.king.camera_x, self.y)
+        for i in range(self.tool_count):
+            self.tool_hammer.draw(self.tool_x + i * 20 - self.king.camera_x, self.tool_y, 24, 48)
         draw_rectangle(*self.get_bb())
         pass
 
     def get_bb(self):
         # 충돌 박스 좌표 반환
-        return self.x - self.king.camera_x - 50, self.y - 100, self.x - self.king.camera_x + 50, self.y
+        return self.x - self.king.camera_x - 50, self.y - 100, self.x - self.king.camera_x + 50, self.y - 50
 
     @staticmethod
     def check_collision(bb1, bb2):
@@ -42,8 +47,17 @@ class Shop_hammer:
         return coins_in_area
 
     def update(self):
+        # 충돌 영역 내 코인 리스트 가져오기
+        coins_in_area = self.count_coins_in_area()
+
+        if len(coins_in_area) == 1 and not self.tool_count == 3:
+            self.tool_count += 1
+            # 충돌 영역 내 코인을 모두 삭제
+            for coin in coins_in_area:
+                game_world.remove_object(coin)
+
         if self.coin_spawned and self.coin is not None:
-            game_world.remove_object(self.coin)  # 게임 월드에서 코인 제거
+            game_world.remove_object(self.coin)
             self.coin = None  # 참조 제거
             self.coin_spawned = False
         pass

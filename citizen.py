@@ -167,9 +167,9 @@ class Run:
     def draw(citizen):
         adjusted_x = citizen.king.get_camera_x()
         if citizen.dir == 1:
-            citizen.walk_image.clip_draw(citizen.frame * 128, 0, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
+            citizen.run_image.clip_draw(citizen.frame * 128, 0, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
         elif citizen.dir == -1:
-            citizen.walk_image.clip_composite_draw(citizen.frame * 128, 0, 128, 128, 0, 'h', citizen.x - adjusted_x, citizen.y, 100,
+            citizen.run_image.clip_composite_draw(citizen.frame * 128, 0, 128, 128, 0, 'h', citizen.x - adjusted_x, citizen.y, 100,
                                                 100)
         pass
 

@@ -187,9 +187,9 @@ class Run:
     def draw(poor):
         adjusted_x = poor.king.get_camera_x()
         if poor.dir == 1:
-            poor.walk_image.clip_draw(poor.frame * 128, 0, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
+            poor.run_image.clip_draw(poor.frame * 128, 0, 128, 128, poor.x - adjusted_x, poor.y, 100, 100)
         elif poor.dir == -1:
-            poor.walk_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h', poor.x - adjusted_x, poor.y, 100,
+            poor.run_image.clip_composite_draw(poor.frame * 128, 0, 128, 128, 0, 'h', poor.x - adjusted_x, poor.y, 100,
                                                 100)
         pass
 

@@ -135,7 +135,7 @@ class Walk:
 class Run:
     @staticmethod
     def enter(worker, e):
-        worker.frame = 1
+        worker.frame = 3
         pass
 
     @staticmethod
@@ -167,9 +167,9 @@ class Run:
     def draw(worker):
         adjusted_x = worker.king.get_camera_x()
         if worker.dir == 1:
-            worker.walk_image.clip_draw(worker.frame * 128, 0, 128, 128, worker.x - adjusted_x, worker.y, 100, 100)
+            worker.run_image.clip_draw(worker.frame * 128, 0, 128, 128, worker.x - adjusted_x, worker.y, 100, 100)
         elif worker.dir == -1:
-            worker.walk_image.clip_composite_draw(worker.frame * 128, 0, 128, 128, 0, 'h', worker.x - adjusted_x, worker.y, 100,
+            worker.run_image.clip_composite_draw(worker.frame * 128, 0, 128, 128, 0, 'h', worker.x - adjusted_x, worker.y, 100,
                                                 100)
         pass
 

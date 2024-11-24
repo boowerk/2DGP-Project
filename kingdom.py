@@ -82,7 +82,7 @@ class Kingdom:
         coins_in_area = self.count_coins_in_area()
 
         # 현재 레벨에서 코인 조건 충족 시 레벨 업 및 코인 제거
-        if len(coins_in_area) == self.kingdom_level + 1:
+        if len(coins_in_area) == self.kingdom_level + 1 and not self.kingdom_level == 5:
             self.kingdom_level += 1
             for coin in coins_in_area:
                 game_world.remove_object(coin)

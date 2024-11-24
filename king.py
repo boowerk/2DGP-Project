@@ -185,3 +185,5 @@ class King:
     def handle_collision(self, group, other):
         if group == 'king:kingdom':
             pass
+        elif group == 'king:shop_hammer':
+            pass

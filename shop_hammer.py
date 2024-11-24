@@ -19,3 +19,7 @@ class Shop_hammer:
 
     def update(self):
         pass
+
+    def handle_collision(self, group, other):
+        if group == 'king:shop_hammer':
+            pass

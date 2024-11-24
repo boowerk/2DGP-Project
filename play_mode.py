@@ -45,6 +45,7 @@ def init():
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)
+    add_collision_pair('king:shop_hammer', king, shop_hammer)
 
 
 def finish():

@@ -117,11 +117,11 @@ class Walk:
             poor.frame = (poor.frame + 6) % 36
             poor.frame_timer = 0
 
-        if poor.x < 50: # 화면 왼쪽 경계
-            poor.x = 50
+        if poor.x < 900:  # 화면 왼쪽 경계
+            poor.x = 900
             poor.dir = 1
-        elif poor.x > 750:  # 화면 오른쪽 경계
-            poor.x = 750
+        elif poor.x > 2100:  # 화면 오른쪽 경계
+            poor.x = 2100
             poor.dir = -1
 
         if random.random() < 0.001:
@@ -172,11 +172,11 @@ class Run:
             poor.frame = (poor.frame + 6) % 36
             poor.frame_timer = 0
 
-        if poor.x < 50:  # 화면 왼쪽 경계
-            poor.x = 50
+        if poor.x < 900:  # 화면 왼쪽 경계
+            poor.x = 900
             poor.dir = 1
-        elif poor.x > 750:  # 화면 오른쪽 경계
-            poor.x = 750
+        elif poor.x > 2100:  # 화면 오른쪽 경계
+            poor.x = 2100
             poor.dir = -1
 
         if random.random() < 0.001:
@@ -195,7 +195,7 @@ class Run:
 
 class Poor:
     def __init__(self, king):
-        self.x, self.y = 400, 315
+        self.x, self.y = 1600, 315
         self.dir = 0
         self.last_dir = 1
         self.frame = 0

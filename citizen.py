@@ -112,11 +112,11 @@ class Walk:
             citizen.frame = (citizen.frame + 6) % 36
             citizen.frame_timer = 0
 
-        if citizen.x < 50: # 화면 왼쪽 경계
-            citizen.x = 50
+        if citizen.x < 900:  # 화면 왼쪽 경계
+            citizen.x = 900
             citizen.dir = 1
-        elif citizen.x > 750:  # 화면 오른쪽 경계
-            citizen.x = 750
+        elif citizen.x > 2100:  # 화면 오른쪽 경계
+            citizen.x = 2100
             citizen.dir = -1
 
         if random.random() < 0.001:
@@ -152,11 +152,11 @@ class Run:
             citizen.frame = (citizen.frame + 6) % 36
             citizen.frame_timer = 0
 
-        if citizen.x < 50:  # 화면 왼쪽 경계
-            citizen.x = 50
+        if citizen.x < 900:  # 화면 왼쪽 경계
+            citizen.x = 900
             citizen.dir = 1
-        elif citizen.x > 750:  # 화면 오른쪽 경계
-            citizen.x = 750
+        elif citizen.x > 2100:  # 화면 오른쪽 경계
+            citizen.x = 2100
             citizen.dir = -1
 
         if random.random() < 0.001:

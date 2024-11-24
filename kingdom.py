@@ -11,6 +11,7 @@ class Kingdom:
         self.kingdom_level = 0
         self.coin_spawned = False
         self.coin = None
+        self.spawned_coins = []  # 생성된 코인을 저장할 리스트
         self.level0_kingdom = load_image("level0_base.png")
         self.level1_kingdom = load_image("level1_base.png")
         self.level2_kingdom = load_image("level2_base.png")
@@ -23,6 +24,16 @@ class Kingdom:
         draw_rectangle(*self.get_bb())
         if self.kingdom_level == 0:
             self.level0_kingdom.draw(self.x - self.king.camera_x, self.y)
+        elif self.kingdom_level == 1:
+            self.level1_kingdom.draw(self.x - self.king.camera_x, self.y)
+        elif self.kingdom_level == 2:
+            self.level2_kingdom.draw(self.x - self.king.camera_x, self.y + 60)
+        elif self.kingdom_level == 3:
+            self.level3_kingdom.draw(self.x - self.king.camera_x, self.y + 60)
+        elif self.kingdom_level == 4:
+            self.level4_kingdom.draw(self.x - self.king.camera_x, self.y + 100)
+        elif self.kingdom_level == 5:
+            self.level5_kingdom.draw(self.x - self.king.camera_x, self.y + 100)
         pass
 
     def get_bb(self):
@@ -49,22 +60,30 @@ class Kingdom:
         return coins_in_area
 
     def handle_collision(self, group, other):
-        if group == 'king:kingdom':
-            if self.kingdom_level == 0 and not self.coin_spawned:
-                self.coin = Coin(1600, 500, other, 0.5)
-                game_world.add_object(self.coin, 1)
-                self.coin_spawned = True
+        if group == 'king:kingdom' and not self.coin_spawned:
+
+            # 현재 레벨에 따라 코인 위치 설정
+            coin_positions = {
+                0: [1600],
+                1: [1600, 1650],
+                2: [1550, 1600, 1650],
+                3: [1550, 1600, 1650, 1700],
+                4: [1500, 1550, 1600, 1650, 1700],
+            }
+            if self.kingdom_level in coin_positions:
+                self.spawned_coins = [Coin(x, 500, other, 0.5) for x in coin_positions[self.kingdom_level]]
+                for coin in self.spawned_coins:
+                    game_world.add_object(coin, 1)
         else:
             self.coin_spawned = False
 
 
     def update(self):
-        # 충돌 영역 내 코인 리스트 가져오기
         coins_in_area = self.count_coins_in_area()
 
-        if len(coins_in_area) == 1 and self.kingdom_level == 0:
+        # 현재 레벨에서 코인 조건 충족 시 레벨 업 및 코인 제거
+        if len(coins_in_area) == self.kingdom_level + 1:
             self.kingdom_level += 1
-            # 충돌 영역 내 코인을 모두 삭제
             for coin in coins_in_area:
                 game_world.remove_object(coin)
 

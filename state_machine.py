@@ -6,6 +6,9 @@ from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_SPACE
 def start_evnet(e):
     return e[0] == 'START'
 
+def find_tool_event(e):
+    return e[0] == 'FIND_TOOL'
+
 def find_coin_event(e):
     return e[0] == 'FIND_COIN'
 

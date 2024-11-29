@@ -4,6 +4,7 @@ from pico2d import load_image, get_time
 
 import game_framework
 import game_world
+import shop_hammer
 from citizen import Citizen
 from coin import Coin
 from game_world import remove_object
@@ -159,7 +160,7 @@ class Run:
             if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
                 remove_object(nearest_coin)
                 remove_object(poor)
-                citizen = Citizen(poor.x, poor.y, poor.king)
+                citizen = Citizen(poor.x, poor.y, poor.king, shop_hammer)
                 game_world.add_object(citizen, 0)
                 return
         else:

@@ -6,7 +6,7 @@ import game_framework
 import game_world
 from coin import Coin
 from game_world import remove_object
-from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
 
 # Citizen Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -105,6 +105,9 @@ class Walk:
     @staticmethod
     def do(citizen):
 
+        if citizen.shop_hammer.tool_count > 0:
+            citizen.state_machine.add_event(('FIND_TOOL', 0))
+
         citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         citizen.frame_timer += game_framework.frame_time
@@ -174,13 +177,14 @@ class Run:
         pass
 
 class Citizen:
-    def __init__(self, x, y, king):
+    def __init__(self, x, y, king, shop_hammer):
         self.x, self.y = x, y
         self.dir = 0
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
         self.king = king
+        self.shop_hammer = shop_hammer
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')
@@ -190,7 +194,7 @@ class Citizen:
             {
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle},
-                Walk: {random_event: Wait, find_coin_event: Run},
+                Walk: {random_event: Wait, find_tool_event: Run},
                 Run : {}
             }
         )

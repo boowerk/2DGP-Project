@@ -87,7 +87,7 @@ class Kingdom:
             for coin in coins_in_area:
                 game_world.remove_object(coin)
 
-        print(f'Coins in area: {len(coins_in_area)}')
+        # print(f'Coins in area: {len(coins_in_area)}')
 
         if self.coin_spawned and self.coin is not None:
             game_world.remove_object(self.coin)  # 게임 월드에서 코인 제거

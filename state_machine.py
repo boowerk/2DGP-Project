@@ -9,6 +9,9 @@ def start_evnet(e):
 def find_coin_event(e):
     return e[0] == 'FIND_COIN'
 
+def find_tool_event(e):
+    return e[0] == 'FIND_TOOL'
+
 def miss_event(e):
     return e[0] == 'MISS'
 

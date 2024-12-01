@@ -8,7 +8,7 @@ from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
 
-# Citizen Run Speed
+# archer Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -17,170 +17,170 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class Idle:
     @staticmethod
-    def enter(citizen, e):
-        citizen.dir = 0    # 정지상태
-        citizen.frame = 1
+    def enter(archer, e):
+        archer.dir = 0    # 정지상태
+        archer.frame = 1
 
-        citizen.start_time = get_time()
+        archer.start_time = get_time()
         pass
 
     @staticmethod
-    def exit(citizen, e):
+    def exit(archer, e):
         pass
 
     @staticmethod
-    def do(citizen):
-        if get_time() - citizen.start_time > 3:
-            citizen.state_machine.add_event(('TIME_OUT', 0))
+    def do(archer):
+        if get_time() - archer.start_time > 3:
+            archer.state_machine.add_event(('TIME_OUT', 0))
 
         if random.random() < 0.01:
-            citizen.state_machine.add_event(('RANDOM', 0))
+            archer.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
-    def draw(citizen):
-        adjusted_x = citizen.king.get_camera_x()
-        if citizen.last_dir == 1:  # 마지막 방향이 오른쪽일 때
-            citizen.wait_image.clip_draw(citizen.frame * 128, 128, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
-        elif citizen.last_dir == -1:  # 마지막 방향이 왼쪽일 때
-            citizen.wait_image.clip_composite_draw(citizen.frame * 128, 128, 128, 128, 0, 'h', citizen.x - adjusted_x, citizen.y, 100, 100)
+    def draw(archer):
+        adjusted_x = archer.king.get_camera_x()
+        if archer.last_dir == 1:  # 마지막 방향이 오른쪽일 때
+            archer.wait_image.clip_draw(archer.frame * 128, 128, 128, 128, archer.x - adjusted_x, archer.y, 100, 100)
+        elif archer.last_dir == -1:  # 마지막 방향이 왼쪽일 때
+            archer.wait_image.clip_composite_draw(archer.frame * 128, 128, 128, 128, 0, 'h', archer.x - adjusted_x, archer.y, 100, 100)
         pass
 
 class Wait:
     @staticmethod
-    def enter(citizen, e):
-        citizen.frame = 1
-        citizen.frame_col = 1
-        citizen.once = False
+    def enter(archer, e):
+        archer.frame = 1
+        archer.frame_col = 1
+        archer.once = False
 
-        citizen.last_dir = citizen.dir
+        archer.last_dir = archer.dir
         pass
 
     @staticmethod
-    def exit(citizen, e):
+    def exit(archer, e):
         pass
 
     @staticmethod
-    def do(citizen):
-        citizen.frame_timer += game_framework.frame_time
-        if citizen.frame_timer >= 0.3 and citizen.once == False:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
-            citizen.frame = (citizen.frame + 6) % 36
-            citizen.frame_timer = 0.0  # 타이머 리셋
+    def do(archer):
+        archer.frame_timer += game_framework.frame_time
+        if archer.frame_timer >= 0.3 and archer.once == False:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
+            archer.frame = (archer.frame + 6) % 36
+            archer.frame_timer = 0.0  # 타이머 리셋
 
-            if citizen.frame == 31:
-                citizen.frame_col = 0
-                citizen.frame = 1
-                citizen.once = True
+            if archer.frame == 31:
+                archer.frame_col = 0
+                archer.frame = 1
+                archer.once = True
 
-        elif citizen.frame_timer >= 0.3 and citizen.once == True:
-            citizen.frame = (citizen.frame + 6) % 18
-            citizen.frame_timer = 0.0  # 타이머 리셋
+        elif archer.frame_timer >= 0.3 and archer.once == True:
+            archer.frame = (archer.frame + 6) % 18
+            archer.frame_timer = 0.0  # 타이머 리셋
 
-            if citizen.frame == 13:
-                citizen.state_machine.add_event(('TIME_OUT', 0))
+            if archer.frame == 13:
+                archer.state_machine.add_event(('TIME_OUT', 0))
         pass
 
     @staticmethod
-    def draw(citizen):
-        adjusted_x = citizen.king.get_camera_x()
-        if citizen.last_dir == 1:  # 마지막 방향이 오른쪽일 때
-            citizen.wait_image.clip_draw(citizen.frame * 128, citizen.frame_col * 128, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
-        elif citizen.last_dir == -1:  # 마지막 방향이 왼쪽일 때
-            citizen.wait_image.clip_composite_draw(citizen.frame * 128, citizen.frame_col * 128, 128, 128, 0, 'h', citizen.x - adjusted_x,
-                                                citizen.y, 100, 100)
+    def draw(archer):
+        adjusted_x = archer.king.get_camera_x()
+        if archer.last_dir == 1:  # 마지막 방향이 오른쪽일 때
+            archer.wait_image.clip_draw(archer.frame * 128, archer.frame_col * 128, 128, 128, archer.x - adjusted_x, archer.y, 100, 100)
+        elif archer.last_dir == -1:  # 마지막 방향이 왼쪽일 때
+            archer.wait_image.clip_composite_draw(archer.frame * 128, archer.frame_col * 128, 128, 128, 0, 'h', archer.x - adjusted_x,
+                                                archer.y, 100, 100)
         pass
 
 class Walk:
     @staticmethod
-    def enter(citizen, e):
-        citizen.dir = random.choice([-1, 1])
-        citizen.frame = 1
+    def enter(archer, e):
+        archer.dir = random.choice([-1, 1])
+        archer.frame = 1
         pass
 
     @staticmethod
-    def exit(citizen, e):
-        citizen.last_dir = citizen.dir
+    def exit(archer, e):
+        archer.last_dir = archer.dir
         pass
 
     @staticmethod
-    def do(citizen):
+    def do(archer):
 
-        citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
+        archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
 
-        citizen.frame_timer += game_framework.frame_time
-        if citizen.frame_timer >= 0.1:
-            citizen.frame = (citizen.frame + 6) % 36
-            citizen.frame_timer = 0
+        archer.frame_timer += game_framework.frame_time
+        if archer.frame_timer >= 0.1:
+            archer.frame = (archer.frame + 6) % 36
+            archer.frame_timer = 0
 
-        if citizen.x < 900:  # 화면 왼쪽 경계
-            citizen.x = 900
-            citizen.dir = 1
-        elif citizen.x > 2100:  # 화면 오른쪽 경계
-            citizen.x = 2100
-            citizen.dir = -1
+        if archer.x < 900:  # 화면 왼쪽 경계
+            archer.x = 900
+            archer.dir = 1
+        elif archer.x > 2100:  # 화면 오른쪽 경계
+            archer.x = 2100
+            archer.dir = -1
 
         if random.random() < 0.001:
-            citizen.state_machine.add_event(('RANDOM', 0))
+            archer.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
-    def draw(citizen):
-        adjusted_x = citizen.king.get_camera_x()
-        if citizen.dir == 1:
-            citizen.walk_image.clip_draw(citizen.frame * 128, 0, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
-        elif citizen.dir == -1:
-            citizen.walk_image.clip_composite_draw(citizen.frame * 128, 0, 128, 128, 0, 'h',citizen.x - adjusted_x, citizen.y, 100, 100)
+    def draw(archer):
+        adjusted_x = archer.king.get_camera_x()
+        if archer.dir == 1:
+            archer.walk_image.clip_draw(archer.frame * 128, 0, 128, 128, archer.x - adjusted_x, archer.y, 100, 100)
+        elif archer.dir == -1:
+            archer.walk_image.clip_composite_draw(archer.frame * 128, 0, 128, 128, 0, 'h',archer.x - adjusted_x, archer.y, 100, 100)
         pass
 
 class Run:
     @staticmethod
-    def enter(citizen, e):
-        citizen.frame = 1
+    def enter(archer, e):
+        archer.frame = 1
         pass
 
     @staticmethod
-    def exit(citizen, e):
-        citizen.last_dir = citizen.dir
+    def exit(archer, e):
+        archer.last_dir = archer.dir
         pass
 
     @staticmethod
-    def do(citizen):
+    def do(archer):
 
-        citizen.frame_timer += game_framework.frame_time
-        if citizen.frame_timer >= 0.1:
-            citizen.frame = (citizen.frame + 6) % 36
-            citizen.frame_timer = 0
+        archer.frame_timer += game_framework.frame_time
+        if archer.frame_timer >= 0.1:
+            archer.frame = (archer.frame + 6) % 36
+            archer.frame_timer = 0
 
         target_x = 1100  # 목표 위치
 
         # 목표 위치로 이동
-        if citizen.x < target_x:
-            citizen.x += RUN_SPEED_PPS * game_framework.frame_time
-            citizen.dir = 1  # 오른쪽으로 이동
-        elif citizen.x > target_x:
-            citizen.x -= RUN_SPEED_PPS * game_framework.frame_time
-            citizen.dir = -1  # 왼쪽으로 이동
+        if archer.x < target_x:
+            archer.x += RUN_SPEED_PPS * game_framework.frame_time
+            archer.dir = 1  # 오른쪽으로 이동
+        elif archer.x > target_x:
+            archer.x -= RUN_SPEED_PPS * game_framework.frame_time
+            archer.dir = -1  # 왼쪽으로 이동
 
         # 목표 위치에 도달했을 때 정확히 고정
-        if abs(citizen.x - target_x) < 1.0:  # 1 픽셀 이하로 가까워지면
-            citizen.x = target_x
-            citizen.dir = 0  # 정지
+        if abs(archer.x - target_x) < 1.0:  # 1 픽셀 이하로 가까워지면
+            archer.x = target_x
+            archer.dir = 0  # 정지
 
         if random.random() < 0.001:
-            citizen.state_machine.add_event(('RANDOM', 0))
+            archer.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
-    def draw(citizen):
-        adjusted_x = citizen.king.get_camera_x()
-        if citizen.dir == 1:
-            citizen.run_image.clip_draw(citizen.frame * 128, 0, 128, 128, citizen.x - adjusted_x, citizen.y, 100, 100)
-        elif citizen.dir == -1:
-            citizen.run_image.clip_composite_draw(citizen.frame * 128, 0, 128, 128, 0, 'h', citizen.x - adjusted_x, citizen.y, 100,
+    def draw(archer):
+        adjusted_x = archer.king.get_camera_x()
+        if archer.dir == 1:
+            archer.run_image.clip_draw(archer.frame * 128, 0, 128, 128, archer.x - adjusted_x, archer.y, 100, 100)
+        elif archer.dir == -1:
+            archer.run_image.clip_composite_draw(archer.frame * 128, 0, 128, 128, 0, 'h', archer.x - adjusted_x, archer.y, 100,
                                                 100)
         pass
 
-class Citizen:
+class Archer:
     def __init__(self, x, y, king):
         self.x, self.y = x, y
         self.dir = 0

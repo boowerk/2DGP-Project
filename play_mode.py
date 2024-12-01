@@ -3,6 +3,7 @@ from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework
 import game_world
+from archer import Archer
 from background import Background
 from citizen import Citizen
 from coin import Coin
@@ -51,6 +52,10 @@ def init():
 
     shop_bow = Shop_bow(king, kingdom)
     game_world.add_object(shop_bow)
+
+    archer = Archer(1100, 315, king)
+    game_world.add_object(archer)
+
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)

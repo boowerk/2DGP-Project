@@ -19,7 +19,7 @@ class Idle:
     @staticmethod
     def enter(archer, e):
         archer.dir = 0    # 정지상태
-        archer.frame = 1
+        archer.frame = 4
 
         archer.start_time = get_time()
         pass
@@ -49,7 +49,7 @@ class Idle:
 class Wait:
     @staticmethod
     def enter(archer, e):
-        archer.frame = 1
+        archer.frame = 4
         archer.frame_col = 1
         archer.once = False
 
@@ -67,16 +67,16 @@ class Wait:
             archer.frame = (archer.frame + 6) % 36
             archer.frame_timer = 0.0  # 타이머 리셋
 
-            if archer.frame == 31:
+            if archer.frame == 34:
                 archer.frame_col = 0
-                archer.frame = 1
+                archer.frame = 4
                 archer.once = True
 
         elif archer.frame_timer >= 0.3 and archer.once == True:
             archer.frame = (archer.frame + 6) % 18
             archer.frame_timer = 0.0  # 타이머 리셋
 
-            if archer.frame == 13:
+            if archer.frame == 16:
                 archer.state_machine.add_event(('TIME_OUT', 0))
         pass
 
@@ -94,7 +94,7 @@ class Walk:
     @staticmethod
     def enter(archer, e):
         archer.dir = random.choice([-1, 1])
-        archer.frame = 1
+        archer.frame = 4
         pass
 
     @staticmethod
@@ -135,7 +135,7 @@ class Walk:
 class Run:
     @staticmethod
     def enter(archer, e):
-        archer.frame = 1
+        archer.frame = 4
         pass
 
     @staticmethod

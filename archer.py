@@ -151,21 +151,6 @@ class Run:
             archer.frame = (archer.frame + 6) % 36
             archer.frame_timer = 0
 
-        target_x = 1100  # 목표 위치
-
-        # 목표 위치로 이동
-        if archer.x < target_x:
-            archer.x += RUN_SPEED_PPS * game_framework.frame_time
-            archer.dir = 1  # 오른쪽으로 이동
-        elif archer.x > target_x:
-            archer.x -= RUN_SPEED_PPS * game_framework.frame_time
-            archer.dir = -1  # 왼쪽으로 이동
-
-        # 목표 위치에 도달했을 때 정확히 고정
-        if abs(archer.x - target_x) < 1.0:  # 1 픽셀 이하로 가까워지면
-            archer.x = target_x
-            archer.dir = 0  # 정지
-
         if random.random() < 0.001:
             archer.state_machine.add_event(('RANDOM', 0))
         pass
@@ -180,6 +165,23 @@ class Run:
                                                 100)
         pass
 
+class Fire:
+    @staticmethod
+    def enter(archer):
+        pass
+
+    @staticmethod
+    def exit(archer, e):
+        pass
+
+    @staticmethod
+    def do(archer):
+        pass
+
+    @staticmethod
+    def draw(archer):
+        pass
+
 class Archer:
     def __init__(self, x, y, king):
         self.x, self.y = x, y
@@ -191,6 +193,7 @@ class Archer:
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')
+        self.arrow = load_image('arrow.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(

@@ -8,6 +8,7 @@ import shop_hammer
 from citizen import Citizen
 from coin import Coin
 from game_world import remove_object
+from shop_hammer import Shop_hammer
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
 
 # Poor Run Speed
@@ -160,7 +161,7 @@ class Run:
             if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
                 remove_object(nearest_coin)
                 remove_object(poor)
-                citizen = Citizen(poor.x, poor.y, poor.king, shop_hammer)
+                citizen = Citizen(poor.x, poor.y, poor.king)
                 game_world.add_object(citizen, 0)
                 return
         else:

@@ -4,13 +4,13 @@ import game_world
 from coin import Coin
 
 
-class Shop_hammer:
+class Shop_bow:
     def __init__(self, king):
         self.king = king
-        self.x, self.y = 1100, 350
-        self.tool_x, self.tool_y = 975, 280
-        self.image = load_image("shop_hammer.png")
-        self.tool_hammer = load_image("tools_hammer.png")
+        self.x, self.y = 2100, 350
+        self.tool_x, self.tool_y = 2150, 280
+        self.image = load_image("shop_bow.png")
+        self.tool_bow = load_image("tools_bow.png")
         self.coin_spawned = False
         self.coin = None
         self.tool_count = 0
@@ -18,7 +18,7 @@ class Shop_hammer:
     def draw(self):
         self.image.draw(self.x - self.king.camera_x, self.y)
         for i in range(self.tool_count):
-            self.tool_hammer.draw(self.tool_x + i * 20 - self.king.camera_x, self.tool_y, 24, 48)
+            self.tool_bow.draw(self.tool_x + i * 20 - self.king.camera_x, self.tool_y, 24, 48)
         draw_rectangle(*self.get_bb())
         pass
 

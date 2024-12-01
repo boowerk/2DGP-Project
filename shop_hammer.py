@@ -1,22 +1,32 @@
 from pico2d import load_image, draw_rectangle
 
 import game_world
+import kingdom
 from coin import Coin
 
 
 class Shop_hammer:
-    def __init__(self, king):
+    image = None
+    tool_hammer = None
+
+    def __init__(self, king, kingdom):
+        if Shop_hammer.image == None:
+            Shop_hammer.image = load_image("shop_hammer.png")
+
+        if Shop_hammer.tool_hammer == None:
+            Shop_hammer.tool_hammer = load_image("tools_hammer.png")
+
         self.king = king
+        self.kingdom = kingdom
         self.x, self.y = 1100, 350
         self.tool_x, self.tool_y = 975, 280
-        self.image = load_image("shop_hammer.png")
-        self.tool_hammer = load_image("tools_hammer.png")
         self.coin_spawned = False
         self.coin = None
         self.tool_count = 0
 
     def draw(self):
-        self.image.draw(self.x - self.king.camera_x, self.y)
+        if self.kingdom.kingdom_level > 0:
+            self.image.draw(self.x - self.king.camera_x, self.y)
         for i in range(self.tool_count):
             self.tool_hammer.draw(self.tool_x + i * 20 - self.king.camera_x, self.tool_y, 24, 48)
         draw_rectangle(*self.get_bb())

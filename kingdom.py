@@ -1,7 +1,10 @@
 from pico2d import load_image, draw_rectangle
 
 import game_world
+import king
 from coin import Coin
+from shop_bow import Shop_bow
+from shop_hammer import Shop_hammer
 
 
 class Kingdom:
@@ -34,6 +37,7 @@ class Kingdom:
             self.level4_kingdom.draw(self.x - self.king.camera_x, self.y + 100)
         elif self.kingdom_level == 5:
             self.level5_kingdom.draw(self.x - self.king.camera_x, self.y + 100)
+
         pass
 
     def get_bb(self):

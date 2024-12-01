@@ -46,10 +46,10 @@ def init():
     kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)
 
-    shop_hammer = Shop_hammer(king)
+    shop_hammer = Shop_hammer(king, kingdom)
     game_world.add_object(shop_hammer)
 
-    shop_bow = Shop_bow(king)
+    shop_bow = Shop_bow(king, kingdom)
     game_world.add_object(shop_bow)
 
     # 충돌 대상 등록

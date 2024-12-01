@@ -3,6 +3,7 @@ from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework
 import game_world
+from background import Background
 from citizen import Citizen
 from coin import Coin
 from game_world import add_collision_pair
@@ -33,7 +34,10 @@ def init():
     game_world.add_object(king, 1)
 
     map = [Map(i * width, king) for i in range(11)]
-    game_world.add_objects(map, 0)
+    game_world.add_objects(map, 1)
+
+    background = Background(king)
+    game_world.add_object(background, 0)
 
     poor = [Poor(king) for i in range(2)]
     game_world.add_objects(poor, 1)

@@ -37,7 +37,7 @@ class Walk:
         walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
         for wall in walls:
             distance = abs(troll.x - wall.x)
-            if distance < 50:  # 벽과 100 이하의 거리일 경우 이벤트 발생
+            if distance < 50 and wall.hp > 0:  # 벽과 100 이하의 거리일 경우 이벤트 발생
                 troll.state_machine.add_event(('FIND_WALL', 0))
 
         troll.x += troll.dir * RUN_SPEED_PPS * game_framework.frame_time
@@ -81,6 +81,8 @@ class Attack:
                 if abs(troll.x - wall.x) < 100:  # 가까운 Wall에만 공격
                     wall.take_damage(1)  # HP 1씩 감소
                     print(f"Wall HP: {wall.hp}")
+                    if wall.hp == 0:
+                        troll.state_machine.add_event(('MISS', 0))
                     break
             troll.attack_timer = 0  # 공격 타이머 초기화
 
@@ -146,7 +148,7 @@ class Troll:
         self.state_machine.set_transitions(
             {
                 Walk: {find_wall_event: Attack},
-                Attack : {},
+                Attack : {miss_event: Walk},
                 Die : {}
             }
         )

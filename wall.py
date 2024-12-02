@@ -13,7 +13,7 @@ class Wall:
 
         self.frame = 0
         self.level = 0
-        self.hp = self.level + 1
+        self.hp = self.level
         self.x, self.y = 800, 310
         self.king = king
         self.coin_spawned = False

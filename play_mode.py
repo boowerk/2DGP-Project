@@ -15,6 +15,7 @@ from poor import Poor
 from shop_bow import Shop_bow
 from shop_hammer import Shop_hammer
 from troll import Troll
+from wall import Wall
 from worker import Worker
 
 
@@ -60,6 +61,8 @@ def init():
     troll = Troll(900, 315, king)
     game_world.add_object(troll)
 
+    wall = Wall(king)
+    game_world.add_object(wall, 2)
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)

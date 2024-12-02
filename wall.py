@@ -11,20 +11,29 @@ class Wall:
         if Wall.image == None:
             Wall.image = load_image('wall.png')
 
-        self.wall_level = 0
+        self.frame = 0
+        self.level = 0
+        self.hp = self.level + 1
         self.x, self.y = 800, 310
         self.king = king
         self.coin_spawned = False
         self.coin = None
 
     def draw(self):
-        self.image.clip_draw(self.wall_level * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
+        self.image.clip_draw(self.frame * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
         draw_rectangle(*self.get_bb())
         pass
 
     def get_bb(self):
         # 충돌 박스 좌표 반환
         return self.x - self.king.camera_x - 20, self.y - 100, self.x - self.king.camera_x + 20, self.y
+
+    def take_damage(self, damage):
+        # 공격을 받을 때 호출
+        self.hp -= damage
+        if self.hp <= 0:
+            self.level = 0
+            self.frame = 0
 
     @staticmethod
     def check_collision(bb1, bb2):
@@ -50,8 +59,10 @@ class Wall:
         # 충돌 영역 내 코인 리스트 가져오기
         coins_in_area = self.count_coins_in_area()
 
-        if len(coins_in_area) == 1 and not self.wall_level == 4:
-            self.wall_level += 1
+        if len(coins_in_area) == 1 and not self.level == 4:
+            self.hp = self.level + 1
+            self.level += 1
+            self.frame += 1
             # 충돌 영역 내 코인을 모두 삭제
             for coin in coins_in_area:
                 game_world.remove_object(coin)

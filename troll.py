@@ -72,6 +72,18 @@ class Attack:
     @staticmethod
     def do(troll):
         troll.frame_timer += game_framework.frame_time
+        troll.attack_timer += game_framework.frame_time  # 공격 타이머 갱신
+
+        # 일정 시간마다 공격 실행 (예: 1초)
+        if troll.attack_timer >= 5.0:
+            walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
+            for wall in walls:
+                if abs(troll.x - wall.x) < 100:  # 가까운 Wall에만 공격
+                    wall.take_damage(1)  # HP 1씩 감소
+                    print(f"Wall HP: {wall.hp}")
+                    break
+            troll.attack_timer = 0  # 공격 타이머 초기화
+
         if troll.frame_timer >= 0.1:
             troll.frame = (troll.frame + 1) % 4
             troll.frame_timer = 0
@@ -124,6 +136,7 @@ class Troll:
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
+        self.attack_timer = 0
         self.king = king
         self.attack_image = load_image('troll_charge.png')
         self.walk_image = load_image('troll_walk.png')

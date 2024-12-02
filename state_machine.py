@@ -9,6 +9,9 @@ def start_evnet(e):
 def find_enemy(e):
     return e[0] == 'FIND_ENEMY'
 
+def find_wall(e):
+    return e[0] == 'FIND_WALL'
+
 def find_coin_event(e):
     return e[0] == 'FIND_COIN'
 

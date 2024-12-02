@@ -7,7 +7,8 @@ import game_world
 import shop_hammer
 from coin import Coin
 from game_world import remove_object
-from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_wall_event
+from wall import Wall
 
 # troll Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -31,6 +32,13 @@ class Walk:
 
     @staticmethod
     def do(troll):
+
+        # Wall과의 거리 확인
+        walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
+        for wall in walls:
+            distance = abs(troll.x - wall.x)
+            if distance < 50:  # 벽과 100 이하의 거리일 경우 이벤트 발생
+                troll.state_machine.add_event(('FIND_WALL', 0))
 
         troll.x += troll.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -121,10 +129,10 @@ class Troll:
         self.walk_image = load_image('troll_walk.png')
         self.die_image = load_image('troll_die.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Die)
+        self.state_machine.start(Walk)
         self.state_machine.set_transitions(
             {
-                Walk: {find_coin_event: Attack},
+                Walk: {find_wall_event: Attack},
                 Attack : {},
                 Die : {}
             }

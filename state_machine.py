@@ -12,6 +12,9 @@ def find_tool_event(e):
 def find_coin_event(e):
     return e[0] == 'FIND_COIN'
 
+def find_wall_event(e):
+    return e[0] == 'FIND_WALL'
+
 def miss_event(e):
     return e[0] == 'MISS'
 

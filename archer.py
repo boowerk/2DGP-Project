@@ -7,7 +7,7 @@ import game_world
 from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event, \
-    find_enemy_event
+    find_enemy_event, attack_event
 from troll import Troll
 
 # archer Run Speed
@@ -68,7 +68,7 @@ class Wait:
         trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
         for troll in trolls:
             distance = abs(archer.x - troll.x)
-            if distance < 400:  # Archer와 Troll의 거리가 200 이하일 때
+            if distance < 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         archer.frame_timer += game_framework.frame_time
@@ -124,7 +124,7 @@ class Walk:
         trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
         for troll in trolls:
             distance = abs(archer.x - troll.x)
-            if distance < 400:  # Archer와 Troll의 거리가 200 이하일 때
+            if distance < 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         if random.random() < 0.001:
@@ -162,8 +162,8 @@ class Run:
             direction = 1 if troll.x > archer.x else -1
             archer.dir = direction
 
-            if distance < 100:  # Archer와 Troll의 거리가 100 이하일 때
-                archer.state_machine.add_event(('FIND_ENEMY', 0))
+            if distance < 200:  # Archer와 Troll의 거리가 100 이하일 때
+                archer.state_machine.add_event(('ATTACK', 0))
 
         archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -196,7 +196,7 @@ class Shoot:
 
     @staticmethod
     def do(archer):
-
+        
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.1:
             archer.frame = (archer.frame + 1) % 7
@@ -232,7 +232,7 @@ class Archer:
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle, find_enemy_event: Run},
                 Walk: {random_event: Wait, find_enemy_event: Run},
-                Run : {},
+                Run : {attack_event: Shoot},
                 Shoot: {}
             }
         )

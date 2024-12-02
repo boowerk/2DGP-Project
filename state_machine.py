@@ -18,6 +18,9 @@ def find_wall_event(e):
 def find_enemy_event(e):
     return e[0] == 'FIND_ENEMY'
 
+def attack_event(e):
+    return e[0] == 'ATTACK'
+
 def miss_event(e):
     return e[0] == 'MISS'
 

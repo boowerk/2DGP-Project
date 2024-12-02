@@ -6,7 +6,7 @@ import game_framework
 import game_world
 from coin import Coin
 from game_world import remove_object
-from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
 
 # Citizen Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -145,19 +145,26 @@ class Run:
 
     @staticmethod
     def do(citizen):
-        citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         citizen.frame_timer += game_framework.frame_time
         if citizen.frame_timer >= 0.1:
             citizen.frame = (citizen.frame + 6) % 36
             citizen.frame_timer = 0
 
-        if citizen.x < 900:  # 화면 왼쪽 경계
-            citizen.x = 900
-            citizen.dir = 1
-        elif citizen.x > 2100:  # 화면 오른쪽 경계
-            citizen.x = 2100
-            citizen.dir = -1
+        target_x = 1100  # 목표 위치
+
+        # 목표 위치로 이동
+        if citizen.x < target_x:
+            citizen.x += RUN_SPEED_PPS * game_framework.frame_time
+            citizen.dir = 1  # 오른쪽으로 이동
+        elif citizen.x > target_x:
+            citizen.x -= RUN_SPEED_PPS * game_framework.frame_time
+            citizen.dir = -1  # 왼쪽으로 이동
+
+        # 목표 위치에 도달했을 때 정확히 고정
+        if abs(citizen.x - target_x) < 1.0:  # 1 픽셀 이하로 가까워지면
+            citizen.x = target_x
+            citizen.dir = 0  # 정지
 
         if random.random() < 0.001:
             citizen.state_machine.add_event(('RANDOM', 0))
@@ -190,7 +197,7 @@ class Citizen:
             {
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle},
-                Walk: {random_event: Wait, find_coin_event: Run},
+                Walk: {random_event: Wait, find_tool_event: Run},
                 Run : {}
             }
         )

@@ -4,6 +4,7 @@ from pico2d import load_image, get_time
 
 import game_framework
 import game_world
+import shop_hammer
 from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event

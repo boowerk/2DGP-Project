@@ -3,6 +3,8 @@ from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework
 import game_world
+from archer import Archer
+from background import Background
 from citizen import Citizen
 from coin import Coin
 from game_world import add_collision_pair
@@ -10,7 +12,10 @@ from king import King
 from kingdom import Kingdom
 from map import Map, width
 from poor import Poor
+from shop_bow import Shop_bow
 from shop_hammer import Shop_hammer
+from troll import Troll
+from wall import Wall
 from worker import Worker
 
 
@@ -33,7 +38,10 @@ def init():
     game_world.add_object(king, 1)
 
     map = [Map(i * width, king) for i in range(11)]
-    game_world.add_objects(map, 0)
+    game_world.add_objects(map, 1)
+
+    background = Background(king)
+    game_world.add_object(background, 0)
 
     poor = [Poor(king) for i in range(2)]
     game_world.add_objects(poor, 1)
@@ -41,15 +49,26 @@ def init():
     kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)
 
-    shop_hammer = Shop_hammer(king)
+    shop_hammer = Shop_hammer(king, kingdom)
     game_world.add_object(shop_hammer)
 
-    worker = Worker(1600, 315, king)
-    game_world.add_object(worker)
+    shop_bow = Shop_bow(king, kingdom)
+    game_world.add_object(shop_bow)
+
+    archer = Archer(1100, 315, king)
+    game_world.add_object(archer)
+
+    troll = Troll(900, 315, king)
+    game_world.add_object(troll)
+
+    wall = Wall(king)
+    game_world.add_object(wall, 2)
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)
     add_collision_pair('king:shop_hammer', king, shop_hammer)
+
+    add_collision_pair('king:wall', king, wall)
 
 
 def finish():

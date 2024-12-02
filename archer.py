@@ -165,27 +165,39 @@ class Run:
                                                 100)
         pass
 
-class Fire:
+class Shoot:
     @staticmethod
-    def enter(archer):
+    def enter(archer, e):
+        archer.frame = 0
         pass
 
     @staticmethod
     def exit(archer, e):
+        archer.last_dir = archer.dir
         pass
 
     @staticmethod
     def do(archer):
+
+        archer.frame_timer += game_framework.frame_time
+        if archer.frame_timer >= 0.1:
+            archer.frame = (archer.frame + 1) % 7
+            archer.frame_timer = 0
         pass
 
     @staticmethod
     def draw(archer):
+        adjusted_x = archer.king.get_camera_x()
+        if archer.dir == 1:
+            archer.shoot_image.clip_draw(archer.frame * 300, 0, 300, 100, archer.x - adjusted_x, archer.y - 10, 240, 80)
+        elif archer.dir == -1:
+            archer.shoot_image.clip_composite_draw(archer.frame * 300, 0, 300, 100, 0, 'h', archer.x - adjusted_x, archer.y - 10, 240, 80)
         pass
 
 class Archer:
     def __init__(self, x, y, king):
         self.x, self.y = x, y
-        self.dir = 0
+        self.dir = 1
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
@@ -193,15 +205,17 @@ class Archer:
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')
+        self.shoot_image = load_image('archer_shoot.png')
         self.arrow = load_image('arrow.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Idle)
+        self.state_machine.start(Shoot)
         self.state_machine.set_transitions(
             {
                 Idle: {time_out: Wait, random_event: Walk},
                 Wait: {time_out: Idle},
                 Walk: {random_event: Wait, find_tool_event: Run},
-                Run : {}
+                Run : {},
+                Shoot: {}
             }
         )
 

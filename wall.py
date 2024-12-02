@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import load_image, draw_rectangle
 
 import game_world
 from coin import Coin
@@ -19,11 +19,12 @@ class Wall:
 
     def draw(self):
         self.image.clip_draw(self.wall_level * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
+        draw_rectangle(*self.get_bb())
         pass
 
     def get_bb(self):
         # 충돌 박스 좌표 반환
-        return self.x - self.king.camera_x - 50, self.y - 100, self.x - self.king.camera_x + 50, self.y - 50
+        return self.x - self.king.camera_x - 20, self.y - 100, self.x - self.king.camera_x + 20, self.y
 
     @staticmethod
     def check_collision(bb1, bb2):
@@ -49,8 +50,8 @@ class Wall:
         # 충돌 영역 내 코인 리스트 가져오기
         coins_in_area = self.count_coins_in_area()
 
-        if len(coins_in_area) == 1 and not self.tool_count == 3:
-            self.tool_count += 1
+        if len(coins_in_area) == 1 and not self.wall_level == 4:
+            self.wall_level += 1
             # 충돌 영역 내 코인을 모두 삭제
             for coin in coins_in_area:
                 game_world.remove_object(coin)
@@ -62,8 +63,8 @@ class Wall:
         pass
 
     def handle_collision(self, group, other):
-        if group == 'king:shop_hammer' and not self.coin_spawned:
-            self.coin = Coin(self.x, self.y, other, 0.7)
+        if group == 'king:wall' and not self.coin_spawned:
+            self.coin = Coin(self.x, self.y + 100, other, 0.7)
             game_world.add_object(self.coin, 1)
             self.coin_spawned = True
         else:

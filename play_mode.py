@@ -68,6 +68,8 @@ def init():
     add_collision_pair('king:kingdom', king, kingdom)
     add_collision_pair('king:shop_hammer', king, shop_hammer)
 
+    add_collision_pair('king:wall', king, wall)
+
 
 def finish():
     game_world.clear()

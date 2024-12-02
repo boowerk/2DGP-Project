@@ -15,6 +15,9 @@ def find_coin_event(e):
 def find_wall_event(e):
     return e[0] == 'FIND_WALL'
 
+def find_enemy_event(e):
+    return e[0] == 'FIND_ENEMY'
+
 def miss_event(e):
     return e[0] == 'MISS'
 

@@ -59,7 +59,7 @@ def init():
     archer = Archer(1100, 315, king)
     game_world.add_object(archer)
 
-    troll = Troll(500, 315, king)
+    troll = Troll(100, 315, king)
     game_world.add_object(troll)
 
     wall = Wall(king)

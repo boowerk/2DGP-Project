@@ -3,8 +3,6 @@ from pico2d import load_image, draw_rectangle
 import game_world
 import king
 from coin import Coin
-from shop_bow import Shop_bow
-from shop_hammer import Shop_hammer
 
 
 class Kingdom:

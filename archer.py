@@ -6,7 +6,9 @@ import game_framework
 import game_world
 from coin import Coin
 from game_world import remove_object
-from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event, \
+    find_enemy_event
+from troll import Troll
 
 # archer Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -62,6 +64,13 @@ class Wait:
 
     @staticmethod
     def do(archer):
+
+        trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
+        for troll in trolls:
+            distance = abs(archer.x - troll.x)
+            if distance < 400:  # Archer와 Troll의 거리가 200 이하일 때
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
+
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.3 and archer.once == False:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
             archer.frame = (archer.frame + 6) % 36
@@ -112,12 +121,11 @@ class Walk:
             archer.frame = (archer.frame + 6) % 36
             archer.frame_timer = 0
 
-        if archer.x < 900:  # 화면 왼쪽 경계
-            archer.x = 900
-            archer.dir = 1
-        elif archer.x > 2100:  # 화면 오른쪽 경계
-            archer.x = 2100
-            archer.dir = -1
+        trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
+        for troll in trolls:
+            distance = abs(archer.x - troll.x)
+            if distance < 400:  # Archer와 Troll의 거리가 200 이하일 때
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         if random.random() < 0.001:
             archer.state_machine.add_event(('RANDOM', 0))
@@ -146,13 +154,23 @@ class Run:
     @staticmethod
     def do(archer):
 
+        trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
+        for troll in trolls:
+            distance = abs(archer.x - troll.x)
+
+            # Troll 방향으로 이동
+            direction = 1 if troll.x > archer.x else -1
+            archer.dir = direction
+
+            if distance < 100:  # Archer와 Troll의 거리가 100 이하일 때
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
+
+        archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
+
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.1:
             archer.frame = (archer.frame + 6) % 36
             archer.frame_timer = 0
-
-        if random.random() < 0.001:
-            archer.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
@@ -208,12 +226,12 @@ class Archer:
         self.shoot_image = load_image('archer_shoot.png')
         self.arrow = load_image('arrow.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Shoot)
+        self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
                 Idle: {time_out: Wait, random_event: Walk},
-                Wait: {time_out: Idle},
-                Walk: {random_event: Wait, find_tool_event: Run},
+                Wait: {time_out: Idle, find_enemy_event: Run},
+                Walk: {random_event: Wait, find_enemy_event: Run},
                 Run : {},
                 Shoot: {}
             }

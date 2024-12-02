@@ -16,42 +16,11 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-class Idle:
-    @staticmethod
-    def enter(troll, e):
-        troll.dir = 0    # 정지상태
-        troll.frame = 0
-
-        troll.start_time = get_time()
-        pass
-
-    @staticmethod
-    def exit(troll, e):
-        pass
-
-    @staticmethod
-    def do(troll):
-        if get_time() - troll.start_time > 3:
-            troll.state_machine.add_event(('TIME_OUT', 0))
-
-        if random.random() < 0.01:
-            troll.state_machine.add_event(('RANDOM', 0))
-        pass
-
-    @staticmethod
-    def draw(troll):
-        adjusted_x = troll.king.get_camera_x()
-        if troll.last_dir == 1:  # 마지막 방향이 오른쪽일 때
-            troll.wait_image.clip_draw(troll.frame * 128, 128, 128, 128, troll.x - adjusted_x, troll.y, 100, 100)
-        elif troll.last_dir == -1:  # 마지막 방향이 왼쪽일 때
-            troll.wait_image.clip_composite_draw(troll.frame * 128, 128, 128, 128, 0, 'h', troll.x - adjusted_x, troll.y, 100, 100)
-        pass
-
 class Walk:
     @staticmethod
     def enter(troll, e):
         troll.dir = random.choice([-1, 1])
-        troll.frame = 3
+        troll.frame = 0
         pass
 
     @staticmethod
@@ -66,27 +35,18 @@ class Walk:
 
         troll.frame_timer += game_framework.frame_time
         if troll.frame_timer >= 0.1:
-            troll.frame = (troll.frame + 6) % 36
+            troll.frame = (troll.frame + 1) % 6
             troll.frame_timer = 0
 
-        if troll.x < 900:  # 화면 왼쪽 경계
-            troll.x = 900
-            troll.dir = 1
-        elif troll.x > 2100:  # 화면 오른쪽 경계
-            troll.x = 2100
-            troll.dir = -1
-
-        if random.random() < 0.001:
-            troll.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
     def draw(troll):
         adjusted_x = troll.king.get_camera_x()
         if troll.dir == 1:
-            troll.walk_image.clip_draw(troll.frame * 128, 0, 128, 128, troll.x - adjusted_x, troll.y, 100, 100)
+            troll.walk_image.clip_draw(troll.frame * 32, 0, 32, 32, troll.x - adjusted_x, troll.y, 100, 100)
         elif troll.dir == -1:
-            troll.walk_image.clip_composite_draw(troll.frame * 128, 0, 128, 128, 0, 'h',troll.x - adjusted_x, troll.y, 100, 100)
+            troll.walk_image.clip_composite_draw(troll.frame * 32, 0, 32, 32, 0, 'h',troll.x - adjusted_x, troll.y, 100, 100)
         pass
 
 class attack:
@@ -109,12 +69,6 @@ class attack:
             troll.frame = (troll.frame + 6) % 36
             troll.frame_timer = 0
 
-        if troll.x < 900:  # 화면 왼쪽 경계
-            troll.x = 900
-            troll.dir = 1
-        elif troll.x > 2100:  # 화면 오른쪽 경계
-            troll.x = 2100
-            troll.dir = -1
 
         if random.random() < 0.001:
             troll.state_machine.add_event(('RANDOM', 0))
@@ -124,9 +78,9 @@ class attack:
     def draw(troll):
         adjusted_x = troll.king.get_camera_x()
         if troll.dir == 1:
-            troll.attack_image.clip_draw(troll.frame * 128, 0, 128, 128, troll.x - adjusted_x, troll.y, 100, 100)
+            troll.attack_image.clip_draw(troll.frame * 32, 0, 32, 32, troll.x - adjusted_x, troll.y, 100, 100)
         elif troll.dir == -1:
-            troll.attack_image.clip_composite_draw(troll.frame * 128, 0, 128, 128, 0, 'h', troll.x - adjusted_x, troll.y, 100,
+            troll.attack_image.clip_composite_draw(troll.frame * 32, 0, 32, 32, 0, 'h', troll.x - adjusted_x, troll.y, 100,
                                                 100)
         pass
 
@@ -159,12 +113,12 @@ class Troll:
         self.walk_image = load_image('troll_walk.png')
         self.die_image = load_image('troll_die.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Idle)
+        self.state_machine.start(Walk)
         self.state_machine.set_transitions(
             {
-                Idle: {random_event: Walk},
                 Walk: {find_coin_event: attack},
-                attack : {}
+                attack : {},
+                die : {}
             }
         )
 

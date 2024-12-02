@@ -14,6 +14,7 @@ from map import Map, width
 from poor import Poor
 from shop_bow import Shop_bow
 from shop_hammer import Shop_hammer
+from troll import Troll
 from worker import Worker
 
 
@@ -55,6 +56,9 @@ def init():
 
     archer = Archer(1100, 315, king)
     game_world.add_object(archer)
+
+    troll = Troll(900, 315, king)
+    game_world.add_object(troll)
 
 
     # 충돌 대상 등록

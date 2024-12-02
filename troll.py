@@ -19,7 +19,8 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 class Walk:
     @staticmethod
     def enter(troll, e):
-        troll.dir = random.choice([-1, 1])
+        # troll.dir = random.choice([-1, 1])
+        troll.dir = 1
         troll.frame = 0
         pass
 
@@ -49,10 +50,10 @@ class Walk:
             troll.walk_image.clip_composite_draw(troll.frame * 32, 0, 32, 32, 0, 'h',troll.x - adjusted_x, troll.y, 100, 100)
         pass
 
-class attack:
+class Attack:
     @staticmethod
     def enter(troll, e):
-        troll.frame = 3
+        troll.frame = 0
         pass
 
     @staticmethod
@@ -66,12 +67,9 @@ class attack:
 
         troll.frame_timer += game_framework.frame_time
         if troll.frame_timer >= 0.1:
-            troll.frame = (troll.frame + 6) % 36
+            troll.frame = (troll.frame + 1) % 4
             troll.frame_timer = 0
 
-
-        if random.random() < 0.001:
-            troll.state_machine.add_event(('RANDOM', 0))
         pass
 
     @staticmethod
@@ -84,7 +82,7 @@ class attack:
                                                 100)
         pass
 
-class die:
+class Die:
     @staticmethod
     def enter(troll, e):
         pass
@@ -104,7 +102,7 @@ class die:
 class Troll:
     def __init__(self, x, y, king):
         self.x, self.y = x, y
-        self.dir = 0
+        self.dir = 1
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
@@ -113,12 +111,12 @@ class Troll:
         self.walk_image = load_image('troll_walk.png')
         self.die_image = load_image('troll_die.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Walk)
+        self.state_machine.start(Attack)
         self.state_machine.set_transitions(
             {
-                Walk: {find_coin_event: attack},
-                attack : {},
-                die : {}
+                Walk: {find_coin_event: Attack},
+                Attack : {},
+                Die : {}
             }
         )
 

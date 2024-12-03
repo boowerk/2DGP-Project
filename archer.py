@@ -4,8 +4,9 @@ from pico2d import load_image, get_time
 
 import game_framework
 import game_world
+from arrow import Arrow
 from coin import Coin
-from game_world import remove_object
+from game_world import remove_object, add_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event, \
     find_enemy_event, attack_event
 from troll import Troll
@@ -196,11 +197,17 @@ class Shoot:
 
     @staticmethod
     def do(archer):
-        
+
+        archer.shoot_arrow()
+
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.1:
             archer.frame = (archer.frame + 1) % 7
             archer.frame_timer = 0
+
+            if archer.frame == 6:
+                archer.state_machine.add_event(("TIME_OUT", 0))
+
         pass
 
     @staticmethod
@@ -219,6 +226,8 @@ class Archer:
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
+        self.last_arrow_time = 0.0
+        self.arrow_interval = 2.0
         self.king = king
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
@@ -233,9 +242,16 @@ class Archer:
                 Wait: {time_out: Idle, find_enemy_event: Run},
                 Walk: {random_event: Wait, find_enemy_event: Run},
                 Run : {attack_event: Shoot},
-                Shoot: {}
+                Shoot: {time_out: Idle}
             }
         )
+
+    def shoot_arrow(self):
+        current_time = get_time()
+        if current_time - self.last_arrow_time >= self.arrow_interval:
+            arrow = Arrow(self.x, self.y, self.dir, self.king)
+            game_world.add_object(arrow)  # 화살 추가
+            self.last_arrow_time = current_time  # 마지막 생성 시간 업데이트
 
     def draw(self):
         self.state_machine.draw()

@@ -69,7 +69,7 @@ class Wait:
         trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
         for troll in trolls:
             distance = abs(archer.x - troll.x)
-            if distance < 600:  # Archer와 Troll의 거리가 200 이하일 때
+            if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         archer.frame_timer += game_framework.frame_time
@@ -125,7 +125,7 @@ class Walk:
         trolls = game_world.find_objects(Troll)  # Troll 객체 리스트 가져오기
         for troll in trolls:
             distance = abs(archer.x - troll.x)
-            if distance < 600:  # Archer와 Troll의 거리가 200 이하일 때
+            if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         if random.random() < 0.001:
@@ -163,7 +163,7 @@ class Run:
             direction = 1 if troll.x > archer.x else -1
             archer.dir = direction
 
-            if distance < 200:  # Archer와 Troll의 거리가 100 이하일 때
+            if distance <= 200:  # Archer와 Troll의 거리가 100 이하일 때
                 archer.state_machine.add_event(('ATTACK', 0))
 
         archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
@@ -227,7 +227,7 @@ class Archer:
         self.frame = 0
         self.frame_timer = 0
         self.last_arrow_time = 0.0
-        self.arrow_interval = 2.0
+        self.arrow_interval = 1.0
         self.king = king
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
@@ -249,7 +249,7 @@ class Archer:
     def shoot_arrow(self):
         current_time = get_time()
         if current_time - self.last_arrow_time >= self.arrow_interval:
-            arrow = Arrow(self.x, self.y, self.dir, self.king)
+            arrow = Arrow(self.x, self.y - 20, self.dir, self.king)
             game_world.add_object(arrow)  # 화살 추가
             self.last_arrow_time = current_time  # 마지막 생성 시간 업데이트
 

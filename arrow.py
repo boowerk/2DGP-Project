@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 
 import game_world
 
@@ -16,5 +16,10 @@ class Arrow:
         if get_time() - self.creation_time > 2.0:
             game_world.remove_object(self)
 
+    def get_bb(self):
+        # 충돌 박스 좌표 반환
+        return self.x - self.king.camera_x - 20, self.y - 8, self.x - self.king.camera_x + 20, self.y + 8
+
     def draw(self):
         self.image.draw(self.x - self.king.camera_x, self.y, 32, 32)
+        draw_rectangle(*self.get_bb())

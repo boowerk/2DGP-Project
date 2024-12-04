@@ -1,13 +1,15 @@
 from pico2d import *
+from pygame.cursors import arrow
 from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework
 import game_world
 from archer import Archer
+from arrow import Arrow
 from background import Background
 from citizen import Citizen
 from coin import Coin
-from game_world import add_collision_pair
+from game_world import add_collision_pair, find_objects
 from king import King
 from kingdom import Kingdom
 from map import Map, width
@@ -73,6 +75,11 @@ def init():
     add_collision_pair('king:shop_hammer', king, shop_hammer)
 
     add_collision_pair('king:wall', king, wall)
+
+    add_collision_pair('troll:arrow', troll, None)
+    arrows = find_objects(Arrow)
+    for arrow in arrows:
+        add_collision_pair('troll:arrow', None, arrow)
 
 
 def finish():

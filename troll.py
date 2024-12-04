@@ -1,6 +1,6 @@
 import random
 
-from pico2d import load_image, get_time
+from pico2d import load_image, get_time, draw_rectangle
 
 import game_framework
 import game_world
@@ -140,6 +140,7 @@ class Troll:
         self.frame_timer = 0
         self.attack_timer = 0
         self.king = king
+        self.hp = 3
         self.attack_image = load_image('troll_charge.png')
         self.walk_image = load_image('troll_walk.png')
         self.die_image = load_image('troll_die.png')
@@ -155,8 +156,25 @@ class Troll:
 
     def draw(self):
         self.state_machine.draw()
+        draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
         self.state_machine.update()
+
+        if self.hp <= 0:
+            game_world.remove_object(self)  # 객체 삭제
+
         pass
+
+    def get_bb(self):
+        # 충돌 박스 좌표 반환
+        return self.x - self.king.camera_x - 20, self.y - 50, self.x - self.king.camera_x + 20, self.y + 20
+
+    def handle_collision(self, group, other):
+        if group == 'troll:arrow':
+            if self.hp > 0:  # hp가 0 이상일 때만 감소
+                self.hp -= 1
+            if self.hp <= 0:
+                print("Troll is dead!")
+        print(f"Troll HP: {self.hp}")  # 디버깅 출력

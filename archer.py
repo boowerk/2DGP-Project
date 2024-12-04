@@ -200,6 +200,13 @@ class Shoot:
 
         archer.shoot_arrow()
 
+        # troll과 arrow 충돌 그룹 추가
+        trolls = game_world.find_objects(Troll)
+        arrows = game_world.find_objects(Arrow)
+        for troll in trolls:
+            for arrow in arrows:
+                game_world.add_collision_pair('troll:arrow', troll, arrow)
+
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.1:
             archer.frame = (archer.frame + 1) % 7

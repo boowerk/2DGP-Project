@@ -12,7 +12,7 @@ from coin_pocket import Coin_pocket
 from game_world import add_collision_pair, find_objects
 from king import King
 from kingdom import Kingdom
-from map import Map, width
+from map import Map
 from poor import Poor
 from portal import Portal
 from shop_bow import Shop_bow
@@ -41,7 +41,7 @@ def init():
     king = King()
     game_world.add_object(king, 1)
 
-    map = [Map(i * width, king) for i in range(11)]
+    map = [Map(king) for i in range(11)]
     game_world.add_objects(map, 1)
 
     background = Background(king)
@@ -58,9 +58,6 @@ def init():
 
     poor = [Poor(king, shop_hammer, shop_bow) for i in range(2)]
     game_world.add_objects(poor, 1)
-
-    archer = Archer(1100, 315, king)
-    game_world.add_object(archer)
 
     portal = Portal(king)
     game_world.add_object(portal)

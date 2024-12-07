@@ -181,10 +181,10 @@ class King:
             King.drop_coin_sound = load_wav('coin_drophitground.wav')
             King.drop_coin_sound.set_volume(32)
 
-        self.x, self.y = 600, 356
+        self.x, self.y = 300, 356
         self.dir = 0
         self.last_dir = 1
-        self.coin_count = 100
+        self.coin_count = 5
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 2.0  # 프레임 전환 간격

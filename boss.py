@@ -90,7 +90,7 @@ class Attack:
             boss.attack_timer = 0  # 공격 타이머 초기화
 
         if boss.frame_timer >= 0.1:
-            boss.frame = (boss.frame + 1) % 4
+            boss.frame = (boss.frame + 1) % 7
             boss.frame_timer = 0
 
         if boss.hp <= 0:
@@ -101,12 +101,20 @@ class Attack:
     @staticmethod
     def draw(boss):
         adjusted_x = boss.king.get_camera_x()
-        if boss.dir == 1:
-            boss.attack_left_image.clip_draw(boss.frame * 96, 0, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
-        elif boss.dir == -1:
-            boss.attack_left_image.clip_composite_draw(boss.frame * 96, 0, 96, 96, 0, 'h', boss.x - adjusted_x, boss.y, 192,
-                                                192)
-        pass
+        if boss.use_left_hand:
+            # 왼손 공격 이미지 출력
+            if boss.dir == 1:
+                boss.attack_left_image.clip_draw(boss.frame * 96, 0, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
+            elif boss.dir == -1:
+                boss.attack_left_image.clip_composite_draw(boss.frame * 96, 0, 96, 96, 0, 'h', boss.x - adjusted_x,
+                                                           boss.y, 192, 192)
+        else:
+            # 오른손 공격 이미지 출력
+            if boss.dir == 1:
+                boss.attack_right_image.clip_draw(boss.frame * 96, 0, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
+            elif boss.dir == -1:
+                boss.attack_right_image.clip_composite_draw(boss.frame * 96, 0, 96, 96, 0, 'h', boss.x - adjusted_x,
+                                                            boss.y, 192, 192)
 
 class Die:
     @staticmethod
@@ -126,17 +134,20 @@ class Die:
             boss.frame = (boss.frame + 1) % 8
             boss.frame_timer = 0
             if boss.frame == 7:
-                game_world.remove_collision_object(boss)
-                game_world.remove_object(boss)  # 객체 삭제
+                boss.col -= 1
+                boss.frame = 0
+                if boss.col == 0 and boss.frame == 2:
+                    game_world.remove_collision_object(boss)
+                    game_world.remove_object(boss)  # 객체 삭제
         pass
 
     @staticmethod
     def draw(boss):
         adjusted_x = boss.king.get_camera_x()
         if boss.dir == 1:
-            boss.die_image.clip_draw(boss.frame * 96, 96, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
+            boss.die_image.clip_draw(boss.frame * 96, boss.col * 96, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
         elif boss.dir == -1:
-            boss.die_image.clip_composite_draw(boss.frame * 96, 96, 96, 96, 0, 'h', boss.x - adjusted_x, boss.y,
+            boss.die_image.clip_composite_draw(boss.frame * 96, boss.col * 96, 96, 96, 0, 'h', boss.x - adjusted_x, boss.y,
                                                    192, 192)
         pass
 
@@ -146,9 +157,11 @@ class Boss:
         self.dir = 1
         self.last_dir = 1
         self.frame = 0
+        self.col = 3
         self.frame_timer = 0
         self.attack_timer = 0
         self.king = king
+        self.use_left_hand = True  # True면 왼손, False면 오른손
         self.damaged = False
         self.damaged_timer = 0
         self.hp = 3
@@ -157,7 +170,7 @@ class Boss:
         self.walk_image = load_image('boss_walk.png')
         self.die_image = load_image('boss_death.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Walk)
+        self.state_machine.start(Attack)
         self.state_machine.set_transitions(
             {
                 Walk: {find_wall_event: Attack, die_event: Die},
@@ -179,6 +192,11 @@ class Boss:
             if self.damaged_timer > 0.5:  # 0.5초 후에 다시 충돌 가능
                 self.damaged = False
                 self.damaged_timer = 0
+
+        # 공격 간격마다 손 교체
+        if self.attack_timer >= 1.0:  # 1초마다 손을 바꿔 공격
+            self.use_left_hand = not self.use_left_hand  # 손 교체
+            self.attack_timer = 0  # 타이머 리셋
 
         if self.hp <= 0:
             self.state_machine.add_event(('DIE', 0))

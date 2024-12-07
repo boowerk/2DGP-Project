@@ -18,6 +18,7 @@ from poor import Poor
 from portal import Portal
 from shop_bow import Shop_bow
 from shop_hammer import Shop_hammer
+from treeline import Treeline
 from troll import Troll
 from wall import Wall
 from water import Water
@@ -65,6 +66,9 @@ def init():
 
     wall = Wall(king)
     game_world.add_object(wall, 2)
+
+    treeline = Treeline(king)
+    game_world.add_object(treeline, 1)
 
     water = Water(king)
     game_world.add_object(water, 1)

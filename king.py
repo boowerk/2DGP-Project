@@ -134,7 +134,7 @@ class Walk:
 
 class King:
     def __init__(self):
-        self.x, self.y = 400, 356
+        self.x, self.y = 2300, 356
         self.dir = 0
         self.last_dir = 1
         self.coin_count = 100

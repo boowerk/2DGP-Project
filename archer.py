@@ -147,6 +147,13 @@ class Walk:
             if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
+        if archer.x < 600:  # 화면 왼쪽 경계
+            archer.x = 900
+            archer.dir = 1
+        elif archer.x > 2100:  # 화면 오른쪽 경계
+            archer.x = 2100
+            archer.dir = -1
+
         if random.random() < 0.001:
             archer.state_machine.add_event(('RANDOM', 0))
         pass

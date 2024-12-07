@@ -67,7 +67,7 @@ def init():
     troll = Troll(180, 315, king)
     game_world.add_object(troll)
 
-    portal = Portal(100, 315, king)
+    portal = Portal(king)
     game_world.add_object(portal)
 
     wall = Wall(king)

@@ -37,5 +37,5 @@ class Coin_pocket:
         text = f"Coin Count: {self.king.coin_count}"
         self.font.draw(650, 490, text, (255, 255, 255))
 
-        self.image.clip_draw(self.frame * 19, 0, 18, 16, self.x, self.y, 72, 64)
+        self.image.clip_draw(self.frame * 16, 0, 16, 16, self.x, self.y, 72, 64)
         pass

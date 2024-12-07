@@ -13,6 +13,7 @@ from king import King
 from kingdom import Kingdom
 from map import Map, width
 from poor import Poor
+from portal import Portal
 from shop_bow import Shop_bow
 from shop_hammer import Shop_hammer
 from troll import Troll
@@ -65,6 +66,9 @@ def init():
 
     troll = Troll(180, 315, king)
     game_world.add_object(troll)
+
+    portal = Portal(100, 315, king)
+    game_world.add_object(portal)
 
     wall = Wall(king)
     game_world.add_object(wall, 2)

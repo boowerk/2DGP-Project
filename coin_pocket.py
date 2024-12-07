@@ -35,7 +35,7 @@ class Coin_pocket:
 
     def draw(self):
         text = f"Coin Count: {self.king.coin_count}"
-        self.font.draw(650, 490, text, (255, 255, 255))  # 화면 중앙(400, 300)에 텍스트 표시
+        self.font.draw(650, 490, text, (255, 255, 255))
 
         self.image.clip_draw(self.frame * 19, 0, 18, 16, self.x, self.y, 72, 64)
         pass

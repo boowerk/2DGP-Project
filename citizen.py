@@ -7,6 +7,7 @@ import game_world
 from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
+from worker import Worker
 
 # Citizen Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -30,6 +31,11 @@ class Idle:
 
     @staticmethod
     def do(citizen):
+        if citizen.shop_hammer.tool_count > 0:
+            citizen.target_x = citizen.shop_hammer.x
+            citizen.state_machine.add_event(('FIND_TOOL', 0))
+
+
         if get_time() - citizen.start_time > 3:
             citizen.state_machine.add_event(('TIME_OUT', 0))
 
@@ -105,6 +111,11 @@ class Walk:
     @staticmethod
     def do(citizen):
 
+        if citizen.shop_hammer.tool_count > 0:
+            citizen.target_x = citizen.shop_hammer.x
+            citizen.state_machine.add_event(('FIND_TOOL', 0))
+            citizen.tool = 'Hammer'
+
         citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         citizen.frame_timer += game_framework.frame_time
@@ -151,7 +162,7 @@ class Run:
             citizen.frame = (citizen.frame + 6) % 36
             citizen.frame_timer = 0
 
-        target_x = 1100  # 목표 위치
+        target_x = citizen.target_x  # 목표 위치
 
         # 목표 위치로 이동
         if citizen.x < target_x:
@@ -164,7 +175,13 @@ class Run:
         # 목표 위치에 도달했을 때 정확히 고정
         if abs(citizen.x - target_x) < 1.0:  # 1 픽셀 이하로 가까워지면
             citizen.x = target_x
-            citizen.dir = 0  # 정지
+
+            if citizen.tool == 'Hammer':
+                worker = Worker(citizen.x, citizen.y, citizen.king)
+                citizen.shop_hammer.tool_count -= 1
+                game_world.remove_object(citizen)
+                game_world.add_object(worker)
+
 
         if random.random() < 0.001:
             citizen.state_machine.add_event(('RANDOM', 0))
@@ -181,13 +198,16 @@ class Run:
         pass
 
 class Citizen:
-    def __init__(self, x, y, king):
+    def __init__(self, x, y, king, shop_hammer):
         self.x, self.y = x, y
         self.dir = 0
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
+        self.target_x = 0
+        self.shop_hammer = shop_hammer
         self.king = king
+        self.tool = None
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')

@@ -47,9 +47,6 @@ def init():
     background = Background(king)
     game_world.add_object(background, 0)
 
-    poor = [Poor(king) for i in range(2)]
-    game_world.add_objects(poor, 1)
-
     kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)
 
@@ -58,6 +55,9 @@ def init():
 
     shop_bow = Shop_bow(king, kingdom)
     game_world.add_object(shop_bow)
+
+    poor = [Poor(king, shop_hammer) for i in range(2)]
+    game_world.add_objects(poor, 1)
 
     archer = Archer(1100, 315, king)
     game_world.add_object(archer)

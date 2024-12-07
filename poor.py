@@ -161,7 +161,7 @@ class Run:
             if abs(nearest_coin.x - poor.x) < 5:  # 동전에 가까워지면 멈춤
                 remove_object(nearest_coin)
                 remove_object(poor)
-                citizen = Citizen(poor.x, poor.y, poor.king)
+                citizen = Citizen(poor.x, poor.y, poor.king, poor.shop_hammer)
                 game_world.add_object(citizen, 0)
                 return
         else:
@@ -196,13 +196,14 @@ class Run:
         pass
 
 class Poor:
-    def __init__(self, king):
+    def __init__(self, king, shop_hammer):
         self.x, self.y = 1600, 315
         self.dir = 0
         self.last_dir = 1
         self.frame = 0
         self.frame_timer = 0
         self.king = king
+        self.shop_hammer = shop_hammer
         self.run_image = load_image('npc_run_sprite.png')
         self.wait_image = load_image('npc_wait_sprite.png')
         self.walk_image = load_image('npc_walk_sprite.png')

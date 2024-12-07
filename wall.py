@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, load_font
 
 import game_framework
 import game_world
@@ -16,6 +16,7 @@ class Wall:
         self.level = 0
         self.hp = self.level
         self.x, self.y = 800, 310
+        self.font = load_font('DeterminationSansK2.ttf', 20)
         self.king = king
         self.coin_spawned = False
         self.coin = None
@@ -24,6 +25,7 @@ class Wall:
 
     def draw(self):
         self.image.clip_draw(self.frame * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
+        self.font.draw(self.x - self.king.camera_x - 10, self.y + 80, f'HP: {self.hp}', (255, 255, 255))
         draw_rectangle(*self.get_bb())
         pass
 
@@ -69,6 +71,7 @@ class Wall:
         self.attacked_timer += game_framework.frame_time
         if self.attacked_timer > 10.0:
             self.attacked = False
+            self.hp = self.level + 1
             self.attacked_timer = 0
 
         if len(coins_in_area) == 1 and not self.level == 4:
@@ -83,7 +86,6 @@ class Wall:
             game_world.remove_object(self.coin)
             self.coin = None  # 참조 제거
             self.coin_spawned = False
-        pass
 
     def handle_collision(self, group, other):
         if group == 'king:wall' and not self.coin_spawned:

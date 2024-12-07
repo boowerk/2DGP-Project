@@ -71,7 +71,7 @@ class Shop_bow:
         pass
 
     def handle_collision(self, group, other):
-        if group == 'king:shop_hammer' and not self.coin_spawned:
+        if group == 'king:bow' and not self.coin_spawned:
             self.coin = Coin(self.x, self.y, other, 0.7)
             game_world.add_object(self.coin, 1)
             self.coin_spawned = True

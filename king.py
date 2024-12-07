@@ -187,3 +187,5 @@ class King:
             pass
         elif group == 'king:shop_hammer':
             pass
+        elif group == 'King:bow':
+            pass

@@ -141,7 +141,7 @@ class King:
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 2.0  # 프레임 전환 간격
         self.image = load_image('king.png')
-        self.font = load_font('ENCR10B.TTF', 16)
+        self.font = load_font('DeterminationSansK2.ttf', 16)
         self.is_kingdom = False # 왕국에 있는가?
         self.camera_x = 0
         self.state_machine = StateMachine(self)

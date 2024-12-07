@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import load_image, load_font
 
 import game_framework
 import game_world
@@ -7,10 +7,13 @@ from troll import Troll
 
 class Portal:
     image = None
+    font = None
 
     def __init__(self, king):
         if Portal.image == None:
             Portal.image = load_image('portal.png')
+        if Portal.font is None:
+            Portal.font = load_font('DeterminationSansK2.ttf', 24)  # 폰트 파일과 크기 설정
 
         self.x, self.y = 100, 350
         self.king = king
@@ -59,5 +62,10 @@ class Portal:
         print("Troll spawned at Portal!")
 
     def draw(self):
+        # 남은 시간 계산 및 화면에 출력
+        remaining_time = max(0, self.spawn_interval - self.spawn_timer)  # 0 이하로는 표시되지 않도록
+        text = f"Next spawn in: {remaining_time:.1f}s"
+        Portal.font.draw(0, 590, text, (255, 255, 255))  # 화면 중앙(400, 300)에 텍스트 표시
+
         self.image.clip_draw(self.frame * 294, self.col * 204, 294, 204, self.x - self.king.camera_x, self.y)
         pass

@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import load_image, load_music
 
 
 class Background:
@@ -6,6 +6,7 @@ class Background:
     rocks = None
     backdrop = None
     sky = None
+    music = None
 
     def __init__(self, king):
         if Background.hills is None:
@@ -19,6 +20,12 @@ class Background:
 
         if Background.sky is None:
             Background.sky = load_image("sky.png")
+
+        if not Background.music:
+            Background.music = load_music('Bloom.wav')
+            Background.music.set_volume(10)
+            Background.music.repeat_play()
+
 
         self.king = king
         self.hills_y = 420

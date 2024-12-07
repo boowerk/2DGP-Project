@@ -1,4 +1,4 @@
-from pico2d import load_image, get_time, load_font, draw_rectangle
+from pico2d import load_image, get_time, load_font, draw_rectangle, load_wav
 from sdl2.examples.gfxdrawing import draw_circles
 
 import game_framework
@@ -88,8 +88,10 @@ class Walk:
     @staticmethod
     def enter(king, e):
         if right_down(e) or left_up(e):
+            king.walk_sound.play()
             king.dir = 1
         elif left_down(e) or right_up(e):
+            king.walk_sound.play()
             king.dir = -1
 
         king.last_dir = king.dir
@@ -140,7 +142,23 @@ class Walk:
 
 
 class King:
+    walk_sound = None
+    get_coin_sound = None
+    drop_coin_sound = None
+
     def __init__(self):
+        if not King.walk_sound:
+            King.walk_sound = load_wav('player_walk_dirt.wav')
+            King.walk_sound.set_volume(32)
+
+        if not King.get_coin_sound:
+            King.get_coin_sound = load_wav('citizen_picksup_coin.wav')
+            King.get_coin_sound.set_volume(32)
+
+        if not King.drop_coin_sound:
+            King.drop_coin_sound = load_wav('coin_drophitground.wav')
+            King.drop_coin_sound.set_volume(32)
+
         self.x, self.y = 2300, 356
         self.dir = 0
         self.last_dir = 1
@@ -195,6 +213,7 @@ class King:
 
     def drop_coin(self):
         if self.coin_count > 0:
+            self.drop_coin_sound.play()
             self.coin_count -= 1
             coin = Coin(self.x, self.y - 80, self)
             game_world.add_object(coin, 1)
@@ -206,6 +225,7 @@ class King:
         # 코인 개수만큼 coin_count 증가
         self.coin_count += len(coins_in_area)
 
+        self.get_coin_sound.play()
         if len(coins_in_area) > 0:
             # 충돌 영역 내 코인을 모두 삭제
             for coin in coins_in_area:

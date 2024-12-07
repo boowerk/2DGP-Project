@@ -1,6 +1,6 @@
 import random
 
-from pico2d import load_image, get_time, draw_rectangle
+from pico2d import load_image, get_time, draw_rectangle, load_wav
 
 import game_framework
 import game_world
@@ -155,7 +155,18 @@ class Die:
         pass
 
 class Boss:
+    hit_sound = None
+    kill_sound = None
+
     def __init__(self, x, king):
+        if not Boss.hit_sound:
+            Boss.hit_sound = load_wav('arrow_hit_bunny.wav')
+            Boss.hit_sound.set_volume(32)
+
+        if not Boss.kill_sound:
+            Boss.kill_sound = load_wav('arrow_kill_troll.wav')
+            Boss.kill_sound.set_volume(32)
+
         self.x, self.y = x, 355
         self.dir = 1
         self.last_dir = 1
@@ -219,8 +230,7 @@ class Boss:
         if group == 'boss:arrow' and not self.damaged:  # 다른 Troll과는 독립적으로 처리
             self.damaged = True  # 충돌 상태로 설정
             if self.hp > 0:  # HP 감소
+                self.hit_sound.play()
                 self.hp -= 1
             if self.hp <= 0:
-                print(f"Troll at ({self.x}, {self.y}) is dead!")
                 self.state_machine.add_event(('DIE', 0))
-            print(f"Troll at ({self.x}, {self.y}) HP: {self.hp}")

@@ -1,4 +1,4 @@
-from pico2d import load_image, draw_rectangle
+from pico2d import load_image, draw_rectangle, load_wav
 
 import game_world
 import king
@@ -6,7 +6,33 @@ from coin import Coin
 
 
 class Kingdom:
+    upgrade_sound_1 = None
+    upgrade_sound_2 = None
+    upgrade_sound_3 = None
+    upgrade_sound_4 = None
+    upgrade_sound_5 = None
+
     def __init__(self, king):
+        if not Kingdom.upgrade_sound_1:
+            Kingdom.upgrade_sound_1 = load_wav('castle_upgrade_1.wav')
+            Kingdom.upgrade_sound_1.set_volume(32)
+
+        if not Kingdom.upgrade_sound_2:
+            Kingdom.upgrade_sound_2 = load_wav('castle_upgrade_2.wav')
+            Kingdom.upgrade_sound_2.set_volume(32)
+
+        if not Kingdom.upgrade_sound_3:
+            Kingdom.upgrade_sound_3 = load_wav('castle_upgrade_3lp.wav')
+            Kingdom.upgrade_sound_3.set_volume(32)
+
+        if not Kingdom.upgrade_sound_4:
+            Kingdom.upgrade_sound_4 = load_wav('castle_upgrade_4.wav')
+            Kingdom.upgrade_sound_4.set_volume(32)
+
+        if not Kingdom.upgrade_sound_5:
+            Kingdom.upgrade_sound_5 = load_wav('castle_upgrade_5.wav')
+            Kingdom.upgrade_sound_5.set_volume(32)
+
         self.x, self.y = 1600, 297
         self.king = king
         self.kingdom_level = 0
@@ -88,6 +114,18 @@ class Kingdom:
             self.kingdom_level += 1
             for coin in coins_in_area:
                 game_world.remove_object(coin)
+
+                # 레벨 업 사운드 재생
+            if self.kingdom_level == 1:
+                Kingdom.upgrade_sound_1.play()
+            elif self.kingdom_level == 2:
+                Kingdom.upgrade_sound_2.play()
+            elif self.kingdom_level == 3:
+                Kingdom.upgrade_sound_3.play()
+            elif self.kingdom_level == 4:
+                Kingdom.upgrade_sound_4.play()
+            elif self.kingdom_level == 5:
+                Kingdom.upgrade_sound_5.play()
 
         # print(f'Coins in area: {len(coins_in_area)}')
 

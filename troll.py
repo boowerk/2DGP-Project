@@ -179,7 +179,6 @@ class Troll:
 
     def draw(self):
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
         pass
 
     def update(self):

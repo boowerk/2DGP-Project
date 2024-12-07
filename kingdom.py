@@ -48,7 +48,6 @@ class Kingdom:
         pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
         if self.kingdom_level == 0:
             self.level0_kingdom.draw(self.x - self.king.camera_x, self.y)
         elif self.kingdom_level == 1:

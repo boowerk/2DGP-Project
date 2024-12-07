@@ -26,7 +26,6 @@ class Wall:
     def draw(self):
         self.image.clip_draw(self.frame * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
         self.font.draw(self.x - self.king.camera_x - 10, self.y + 80, f'HP: {self.hp}', (255, 255, 255))
-        draw_rectangle(*self.get_bb())
         pass
 
     def get_bb(self):

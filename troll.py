@@ -81,7 +81,7 @@ class Attack:
                 if abs(troll.x - wall.x) < 100:  # 가까운 Wall에만 공격
                     wall.take_damage(1)  # HP 1씩 감소
                     print(f"Wall HP: {wall.hp}")
-                    if wall.hp == 0:
+                    if wall.hp <= 0:
                         troll.state_machine.add_event(('MISS', 0))
                     break
             troll.attack_timer = 0  # 공격 타이머 초기화

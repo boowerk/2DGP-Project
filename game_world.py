@@ -1,12 +1,19 @@
 world = [ [] for _ in range(4)]
 collision_pairs = {}
 
+def is_collision_pair_registered(group, a, b):
+    if group not in collision_pairs:
+        return False  # 그룹 자체가 없으면 등록되지 않음
+    return a in collision_pairs[group][0] and b in collision_pairs[group][1]
+
 def add_collision_pair(group, a, b):
     if group not in collision_pairs:
         collision_pairs[group] = [[], []]  # 초기화
-    if a:
+
+    # 중복 등록 방지
+    if a and not is_collision_pair_registered(group, a, b):
         collision_pairs[group][0].append(a)
-    if b:
+    if b and not is_collision_pair_registered(group, a, b):
         collision_pairs[group][1].append(b)
 
 def remove_collision_object(o):

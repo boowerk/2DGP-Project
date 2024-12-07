@@ -63,6 +63,9 @@ def init():
     troll = Troll(100, 315, king)
     game_world.add_object(troll)
 
+    troll = Troll(180, 315, king)
+    game_world.add_object(troll)
+
     wall = Wall(king)
     game_world.add_object(wall, 2)
 

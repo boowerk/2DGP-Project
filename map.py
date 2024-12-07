@@ -5,7 +5,7 @@ class Map:
 
     def __init__(self, king):
         if Map.grass_tile == None:
-            Map.grass_tile = load_image('tiles.png')  
+            Map.grass_tile = load_image('tiles.png')
         self.image_width = 381  # 타일 한 개의 너비
         self.image_height = 96  # 타일 한 개의 높이
         self.king = king

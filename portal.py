@@ -15,7 +15,7 @@ class Portal:
         if Portal.font is None:
             Portal.font = load_font('DeterminationSansK2.ttf', 24)  # 폰트 파일과 크기 설정
 
-        self.x, self.y = 100, 350
+        self.x, self.y = -300, 350
         self.king = king
         self.frame = 0
         self.col = 8
@@ -30,7 +30,7 @@ class Portal:
     def update(self):
         self.distance = abs(self.king.x - self.x)
 
-        if self.distance <= 400:
+        if self.distance <= 600:
             self.frame_timer += game_framework.frame_time
             if self.frame_timer >= 0.1:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
                 self.frame = (self.frame + 1) % 5

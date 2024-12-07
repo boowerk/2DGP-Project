@@ -56,7 +56,7 @@ def init():
     shop_bow = Shop_bow(king, kingdom)
     game_world.add_object(shop_bow)
 
-    poor = [Poor(king, shop_hammer) for i in range(2)]
+    poor = [Poor(king, shop_hammer, shop_bow) for i in range(2)]
     game_world.add_objects(poor, 1)
 
     archer = Archer(1100, 315, king)

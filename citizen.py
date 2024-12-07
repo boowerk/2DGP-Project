@@ -4,6 +4,7 @@ from pico2d import load_image, get_time
 
 import game_framework
 import game_world
+from archer import Archer
 from coin import Coin
 from game_world import remove_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event
@@ -34,6 +35,11 @@ class Idle:
         if citizen.shop_hammer.tool_count > 0:
             citizen.target_x = citizen.shop_hammer.x
             citizen.state_machine.add_event(('FIND_TOOL', 0))
+            citizen.tool = 'Hammer'
+        elif citizen.shop_bow.tool_count > 0:
+            citizen.target_x = citizen.shop_bow.x
+            citizen.state_machine.add_event(('FIND_TOOL', 0))
+            citizen.tool = 'Bow'
 
 
         if get_time() - citizen.start_time > 3:
@@ -115,6 +121,10 @@ class Walk:
             citizen.target_x = citizen.shop_hammer.x
             citizen.state_machine.add_event(('FIND_TOOL', 0))
             citizen.tool = 'Hammer'
+        elif citizen.shop_bow.tool_count > 0:
+            citizen.target_x = citizen.shop_bow.x
+            citizen.state_machine.add_event(('FIND_TOOL', 0))
+            citizen.tool = 'Bow'
 
         citizen.x += citizen.dir * RUN_SPEED_PPS * game_framework.frame_time
 
@@ -181,6 +191,11 @@ class Run:
                 citizen.shop_hammer.tool_count -= 1
                 game_world.remove_object(citizen)
                 game_world.add_object(worker)
+            elif citizen.tool == 'Bow':
+                archer = Archer(citizen.x, citizen.y, citizen.king)
+                citizen.shop_bow.tool_count -= 1
+                game_world.remove_object(citizen)
+                game_world.add_object(archer)
 
 
         if random.random() < 0.001:
@@ -198,7 +213,7 @@ class Run:
         pass
 
 class Citizen:
-    def __init__(self, x, y, king, shop_hammer):
+    def __init__(self, x, y, king, shop_hammer, shop_bow):
         self.x, self.y = x, y
         self.dir = 0
         self.last_dir = 1
@@ -206,6 +221,7 @@ class Citizen:
         self.frame_timer = 0
         self.target_x = 0
         self.shop_hammer = shop_hammer
+        self.shop_bow = shop_bow
         self.king = king
         self.tool = None
         self.run_image = load_image('npc_run_sprite.png')

@@ -7,6 +7,7 @@ import game_world
 import shop_hammer
 from coin import Coin
 from game_world import remove_object
+from king import King
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_wall_event, die_event
 from wall import Wall
 
@@ -32,6 +33,11 @@ class Walk:
 
     @staticmethod
     def do(boss):
+        kings = game_world.find_objects(King)
+        bosses = game_world.find_objects(Boss)
+        for king in kings:
+            for boss in bosses:
+                game_world.add_collision_pair('King:boss', king, boss)
 
         # Wall과의 거리 확인
         walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
@@ -74,6 +80,12 @@ class Attack:
 
     @staticmethod
     def do(boss):
+        kings = game_world.find_objects(King)
+        bosses = game_world.find_objects(Boss)
+        for king in kings:
+            for boss in bosses:
+                game_world.add_collision_pair('King:boss', king, boss)
+
         boss.frame_timer += game_framework.frame_time
         boss.attack_timer += game_framework.frame_time  # 공격 타이머 갱신
         boss.hand_timer += game_framework.frame_time
@@ -234,3 +246,5 @@ class Boss:
                 self.hp -= 1
             if self.hp <= 0:
                 self.state_machine.add_event(('DIE', 0))
+        elif group == 'King:boss':
+            pass

@@ -213,3 +213,5 @@ class Troll:
                 self.hp -= 1
             if self.hp <= 0:
                 self.state_machine.add_event(('DIE', 0))
+        elif group == 'King:troll':
+            pass

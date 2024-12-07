@@ -2,9 +2,12 @@ from pico2d import load_image, get_time, load_font, draw_rectangle, load_wav
 from sdl2.examples.gfxdrawing import draw_circles
 
 import game_framework
+import game_over_mode
 import game_world
 from coin import Coin
 from state_machine import StateMachine, time_out, right_down, left_up, left_down, right_up, space_down
+from troll import Troll
+
 
 # King Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -30,6 +33,12 @@ class Idle:
 
     @staticmethod
     def do(king):
+        kings = game_world.find_objects(King)
+        trolls = game_world.find_objects(Troll)
+        for king in kings:
+            for troll in trolls:
+                game_world.add_collision_pair('King:troll', king, troll)
+
         if get_time() - king.start_time > 3:
             king.state_machine.add_event(('TIME_OUT', 0))
         pass
@@ -63,6 +72,13 @@ class Wait:
 
     @staticmethod
     def do(king):
+        kings = game_world.find_objects(King)
+        trolls = game_world.find_objects(Troll)
+        for king in kings:
+            for troll in trolls:
+                game_world.add_collision_pair('King:troll', king, troll)
+
+
         king.frame_timer += 0.01
 
         if king.frame_timer >= king.frame_delay:
@@ -109,6 +125,12 @@ class Walk:
 
     @staticmethod
     def do(king):
+        kings = game_world.find_objects(King)
+        trolls = game_world.find_objects(Troll)
+        for king in kings:
+            for troll in trolls:
+                game_world.add_collision_pair('King:troll', king, troll)
+
         if king.x < -160:
             king.x = -160
             king.x -= king.dir * RUN_SPEED_PPS * game_framework.frame_time
@@ -225,9 +247,10 @@ class King:
         # 코인 개수만큼 coin_count 증가
         self.coin_count += len(coins_in_area)
 
-        self.get_coin_sound.play()
         if len(coins_in_area) > 0:
             # 충돌 영역 내 코인을 모두 삭제
+            self.get_coin_sound.play()
+
             for coin in coins_in_area:
                 game_world.remove_object(coin)
 
@@ -248,4 +271,10 @@ class King:
         elif group == 'king:shop_hammer':
             pass
         elif group == 'King:bow':
+            pass
+        elif group == 'King:troll':
+            game_framework.push_mode(game_over_mode)
+            pass
+        elif group == 'King:boss':
+            game_framework.push_mode(game_over_mode)
             pass

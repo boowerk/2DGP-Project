@@ -5,6 +5,7 @@ from pico2d import load_image, get_time
 import game_framework
 import game_world
 from arrow import Arrow
+from boss import Boss
 from coin import Coin
 from game_world import remove_object, add_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event, \
@@ -72,6 +73,12 @@ class Wait:
             if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
+        bosses = game_world.find_objects(Boss)  # Troll 객체 리스트 가져오기
+        for boss in bosses:
+            distance = abs(archer.x - boss.x)
+            if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
+
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.3 and archer.once == False:  # 프레임 간격을 0.1초로 설정 (필요에 따라 조정 가능)
             archer.frame = (archer.frame + 6) % 36
@@ -128,6 +135,12 @@ class Walk:
             if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
+        bosses = game_world.find_objects(Boss)  # Troll 객체 리스트 가져오기
+        for boss in bosses:
+            distance = abs(archer.x - boss.x)
+            if distance <= 600:  # Archer와 Troll의 거리가 200 이하일 때
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
+
         if random.random() < 0.001:
             archer.state_machine.add_event(('RANDOM', 0))
         pass
@@ -166,6 +179,16 @@ class Run:
             if distance <= 200:  # Archer와 Troll의 거리가 100 이하일 때
                 archer.state_machine.add_event(('ATTACK', 0))
 
+        bosses = game_world.find_objects(Boss)
+        for boss in bosses:
+            distance = abs(archer.x - boss.x)
+
+            direction = 1 if boss.x > archer.x else -1
+            archer.dir = direction
+
+            if distance <= 200:
+                archer.state_machine.add_event(('ATTACK', 0))
+
         archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         archer.frame_timer += game_framework.frame_time
@@ -202,10 +225,15 @@ class Shoot:
 
         # troll과 arrow 충돌 그룹 추가
         trolls = game_world.find_objects(Troll)
+        bosses = game_world.find_objects(Boss)
         arrows = game_world.find_objects(Arrow)
         for troll in trolls:
             for arrow in arrows:
                 game_world.add_collision_pair('troll:arrow', troll, arrow)
+
+        for boss in bosses:
+            for arrow in arrows:
+                game_world.add_collision_pair('boss:arrow', boss, arrow)
 
         archer.frame_timer += game_framework.frame_time
         if archer.frame_timer >= 0.1:

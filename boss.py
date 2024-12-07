@@ -138,7 +138,7 @@ class Die:
             if boss.frame == 7:
                 boss.col -= 1
                 boss.frame = 0
-                if boss.col == 0 and boss.frame == 2:
+                if boss.col == 0:
                     game_world.remove_collision_object(boss)
                     game_world.remove_object(boss)  # 객체 삭제
         pass
@@ -173,7 +173,7 @@ class Boss:
         self.walk_image = load_image('boss_walk.png')
         self.die_image = load_image('boss_death.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Walk)
+        self.state_machine.start(Die)
         self.state_machine.set_transitions(
             {
                 Walk: {find_wall_event: Attack, die_event: Die},
@@ -208,7 +208,7 @@ class Boss:
 
     def get_bb(self):
         # 충돌 박스 좌표 반환
-        return self.x - self.king.camera_x - 20, self.y - 50, self.x - self.king.camera_x + 20, self.y + 20
+        return self.x - self.king.camera_x - 40, self.y - 80, self.x - self.king.camera_x + 40, self.y + 20
 
     def handle_collision(self, group, other):
         if group == 'boss:arrow' and not self.damaged:  # 다른 Troll과는 독립적으로 처리

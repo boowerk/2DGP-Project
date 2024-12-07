@@ -35,3 +35,7 @@ class Arrow:
             self.to_remove = True  # 충돌 플래그 설정
             game_world.remove_object(self)
             game_world.remove_collision_object(self)
+        elif group == 'boss:arrow' and not self.to_remove:
+            self.to_remove = True  # 충돌 플래그 설정
+            game_world.remove_object(self)
+            game_world.remove_collision_object(self)

@@ -60,11 +60,12 @@ class Shop_hammer:
         # 충돌 영역 내 코인 리스트 가져오기
         coins_in_area = self.count_coins_in_area()
 
-        if len(coins_in_area) == 1 and not self.tool_count == 3:
-            self.tool_count += 1
-            # 충돌 영역 내 코인을 모두 삭제
-            for coin in coins_in_area:
-                game_world.remove_object(coin)
+        if not self.kingdom.kingdom_level == 0:
+            if len(coins_in_area) == 1 and not self.tool_count == 3:
+                self.tool_count += 1
+                # 충돌 영역 내 코인을 모두 삭제
+                for coin in coins_in_area:
+                    game_world.remove_object(coin)
 
         if self.coin_spawned and self.coin is not None:
             game_world.remove_object(self.coin)
@@ -73,7 +74,7 @@ class Shop_hammer:
         pass
 
     def handle_collision(self, group, other):
-        if group == 'king:shop_hammer' and not self.coin_spawned:
+        if group == 'king:shop_hammer' and not self.coin_spawned and not self.kingdom.kingdom_level == 0:
             self.coin = Coin(self.x, self.y, other, 0.7)
             game_world.add_object(self.coin, 1)
             self.coin_spawned = True

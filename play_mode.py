@@ -61,12 +61,6 @@ def init():
     archer = Archer(1100, 315, king)
     game_world.add_object(archer)
 
-    troll = Troll(100, 315, king)
-    game_world.add_object(troll)
-
-    troll = Troll(180, 315, king)
-    game_world.add_object(troll)
-
     portal = Portal(king)
     game_world.add_object(portal)
 
@@ -81,11 +75,6 @@ def init():
     add_collision_pair('king:shop_hammer', king, shop_hammer)
 
     add_collision_pair('king:wall', king, wall)
-
-    add_collision_pair('troll:arrow', troll, None)
-    arrows = find_objects(Arrow)
-    for arrow in arrows:
-        add_collision_pair('troll:arrow', None, arrow)
 
 
 def finish():

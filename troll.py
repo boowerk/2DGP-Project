@@ -141,8 +141,8 @@ class Die:
         pass
 
 class Troll:
-    def __init__(self, x, y, king):
-        self.x, self.y = x, y
+    def __init__(self, x, king):
+        self.x, self.y = x, 315
         self.dir = 1
         self.last_dir = 1
         self.frame = 0

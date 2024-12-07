@@ -56,9 +56,9 @@ class Walk:
     def draw(boss):
         adjusted_x = boss.king.get_camera_x()
         if boss.dir == 1:
-            boss.walk_image.clip_draw(boss.frame * 32, 0, 32, 32, boss.x - adjusted_x, boss.y, 100, 100)
+            boss.walk_image.clip_draw(boss.frame * 96, 0, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
         elif boss.dir == -1:
-            boss.walk_image.clip_composite_draw(boss.frame * 32, 0, 32, 32, 0, 'h',boss.x - adjusted_x, boss.y, 100, 100)
+            boss.walk_image.clip_composite_draw(boss.frame * 96, 0, 96, 96, 0, 'h',boss.x - adjusted_x, boss.y, 192, 192)
         pass
 
 class Attack:
@@ -102,10 +102,10 @@ class Attack:
     def draw(boss):
         adjusted_x = boss.king.get_camera_x()
         if boss.dir == 1:
-            boss.attack_image.clip_draw(boss.frame * 32, 0, 32, 32, boss.x - adjusted_x, boss.y, 100, 100)
+            boss.attack_left_image.clip_draw(boss.frame * 96, 0, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
         elif boss.dir == -1:
-            boss.attack_image.clip_composite_draw(boss.frame * 32, 0, 32, 32, 0, 'h', boss.x - adjusted_x, boss.y, 100,
-                                                100)
+            boss.attack_left_image.clip_composite_draw(boss.frame * 96, 0, 96, 96, 0, 'h', boss.x - adjusted_x, boss.y, 192,
+                                                192)
         pass
 
 class Die:
@@ -134,15 +134,15 @@ class Die:
     def draw(boss):
         adjusted_x = boss.king.get_camera_x()
         if boss.dir == 1:
-            boss.die_image.clip_draw(boss.frame * 32, 32, 32, 32, boss.x - adjusted_x, boss.y, 100, 100)
+            boss.die_image.clip_draw(boss.frame * 96, 96, 96, 96, boss.x - adjusted_x, boss.y, 192, 192)
         elif boss.dir == -1:
-            boss.die_image.clip_composite_draw(boss.frame * 32, 0, 32, 32, 0, 'h', boss.x - adjusted_x, boss.y,
-                                                   100, 100)
+            boss.die_image.clip_composite_draw(boss.frame * 96, 96, 96, 96, 0, 'h', boss.x - adjusted_x, boss.y,
+                                                   192, 192)
         pass
 
 class Boss:
     def __init__(self, x, king):
-        self.x, self.y = x, 315
+        self.x, self.y = x, 355
         self.dir = 1
         self.last_dir = 1
         self.frame = 0
@@ -152,9 +152,10 @@ class Boss:
         self.damaged = False
         self.damaged_timer = 0
         self.hp = 3
-        self.attack_image = load_image('troll_charge.png')
-        self.walk_image = load_image('troll_walk.png')
-        self.die_image = load_image('troll_die.png')
+        self.attack_left_image = load_image('boss_bash_left.png')
+        self.attack_right_image = load_image('boss_bash_right.png')
+        self.walk_image = load_image('boss_walk.png')
+        self.die_image = load_image('boss_death.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start(Walk)
         self.state_machine.set_transitions(

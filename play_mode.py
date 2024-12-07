@@ -6,6 +6,7 @@ import game_world
 from archer import Archer
 from arrow import Arrow
 from background import Background
+from boss import Boss
 from citizen import Citizen
 from coin import Coin
 from coin_pocket import Coin_pocket
@@ -70,6 +71,9 @@ def init():
 
     coin_pocket = Coin_pocket(king)
     game_world.add_object(coin_pocket, 3)
+
+    boss = Boss(400, king)
+    game_world.add_object(boss, 1)
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)

@@ -173,7 +173,7 @@ class Boss:
         self.walk_image = load_image('boss_walk.png')
         self.die_image = load_image('boss_death.png')
         self.state_machine = StateMachine(self)
-        self.state_machine.start(Die)
+        self.state_machine.start(Walk)
         self.state_machine.set_transitions(
             {
                 Walk: {find_wall_event: Attack, die_event: Die},

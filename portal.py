@@ -2,6 +2,7 @@ from pico2d import load_image, load_font
 
 import game_framework
 import game_world
+from boss import Boss
 from troll import Troll
 
 
@@ -56,9 +57,13 @@ class Portal:
 
     def spawn_troll(self):
         # Troll 생성 및 game_world에 추가
-        for i in range(self.wave):
-            new_troll = Troll(self.x + i * 50, self.king)  # 약간의 위치 차이를 주어 생성
-            game_world.add_object(new_troll, 1)  # 1번 레이어에 추가 (적절한 레이어 설정 필요)
+        if self.wave % 3 == 0:
+            boss = Boss(self.x, self.king)
+            game_world.add_object(boss, 1)
+        else:
+            for i in range(self.wave):
+                new_troll = Troll(self.x + i * 50, self.king)  # 약간의 위치 차이를 주어 생성
+                game_world.add_object(new_troll, 1)  # 1번 레이어에 추가 (적절한 레이어 설정 필요)
         print("Troll spawned at Portal!")
 
     def draw(self):

@@ -139,6 +139,7 @@ class Die:
                 boss.col -= 1
                 boss.frame = 0
                 if boss.col == 0:
+                    boss.drop_coin()
                     game_world.remove_collision_object(boss)
                     game_world.remove_object(boss)  # 객체 삭제
         pass
@@ -186,6 +187,10 @@ class Boss:
         self.state_machine.draw()
         draw_rectangle(*self.get_bb())
         pass
+
+    def drop_coin(self):
+        coin = Coin(self.x, self.y - 80, self.king)
+        game_world.add_object(coin, 1)
 
     def update(self):
         self.state_machine.update()

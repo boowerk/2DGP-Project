@@ -126,6 +126,7 @@ class Die:
             troll.frame = (troll.frame + 1) % 8
             troll.frame_timer = 0
             if troll.frame == 7:
+                troll.drop_coin()
                 game_world.remove_collision_object(troll)
                 game_world.remove_object(troll)  # 객체 삭제
         pass
@@ -183,6 +184,10 @@ class Troll:
             self.state_machine.add_event(('DIE', 0))
 
         pass
+
+    def drop_coin(self):
+        coin = Coin(self.x, self.y - 40, self.king)
+        game_world.add_object(coin, 1)
 
     def get_bb(self):
         # 충돌 박스 좌표 반환

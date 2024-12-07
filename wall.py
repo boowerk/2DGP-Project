@@ -1,5 +1,6 @@
 from pico2d import load_image, draw_rectangle
 
+import game_framework
 import game_world
 from coin import Coin
 
@@ -18,6 +19,8 @@ class Wall:
         self.king = king
         self.coin_spawned = False
         self.coin = None
+        self.attacked = False
+        self.attacked_timer = 0
 
     def draw(self):
         self.image.clip_draw(self.frame * 32, 0, 32, 64, self.x - self.king.camera_x, self.y, 64, 128)
@@ -31,6 +34,7 @@ class Wall:
     def take_damage(self, damage):
         # 공격을 받을 때 호출
         self.hp -= damage
+        self.attacked = True
         if self.hp <= 0:
             self.level = 0
             self.frame = 0
@@ -55,9 +59,17 @@ class Wall:
 
         return coins_in_area
 
+    def is_attacked(self):
+        return self.attacked
+
     def update(self):
         # 충돌 영역 내 코인 리스트 가져오기
         coins_in_area = self.count_coins_in_area()
+
+        self.attacked_timer += game_framework.frame_time
+        if self.attacked_timer > 10.0:
+            self.attacked = False
+            self.attacked_timer = 0
 
         if len(coins_in_area) == 1 and not self.level == 4:
             self.hp = self.level + 1

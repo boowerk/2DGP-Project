@@ -11,6 +11,7 @@ from game_world import remove_object, add_object
 from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_tool_event, \
     find_enemy_event, attack_event
 from troll import Troll
+from wall import Wall
 
 # archer Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)
@@ -122,6 +123,11 @@ class Walk:
     @staticmethod
     def do(archer):
 
+        walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
+        for wall in walls:
+            if wall.is_attacked():  # Wall이 공격받은 상태인지 확인
+                archer.state_machine.add_event(('FIND_ENEMY', 0))
+
         archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
 
         archer.frame_timer += game_framework.frame_time
@@ -188,6 +194,13 @@ class Run:
 
             if distance <= 200:
                 archer.state_machine.add_event(('ATTACK', 0))
+
+        walls = game_world.find_objects(Wall)  # Wall 객체 리스트 가져오기
+        for wall in walls:
+            if wall.is_attacked():  # Wall이 공격받은 상태인지 확인
+                direction = 1 if wall.x > archer.x else -1
+                archer.dir = direction  # 벽 방향으로 이동
+                distance = abs(archer.x - wall.x)
 
         archer.x += archer.dir * RUN_SPEED_PPS * game_framework.frame_time
 

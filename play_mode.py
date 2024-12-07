@@ -8,6 +8,7 @@ from arrow import Arrow
 from background import Background
 from citizen import Citizen
 from coin import Coin
+from coin_pocket import Coin_pocket
 from game_world import add_collision_pair, find_objects
 from king import King
 from kingdom import Kingdom
@@ -69,6 +70,9 @@ def init():
 
     water = Water(king)
     game_world.add_object(water, 1)
+
+    coin_pocket = Coin_pocket(king)
+    game_world.add_object(coin_pocket, 3)
 
     # 충돌 대상 등록
     add_collision_pair('king:kingdom', king, kingdom)

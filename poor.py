@@ -203,6 +203,7 @@ class Poor:
         self.frame = 0
         self.frame_timer = 0
         self.king = king
+        self.gen_timer = 0
         self.shop_hammer = shop_hammer
         self.shop_bow = shop_bow
         self.run_image = load_image('npc_run_sprite.png')
@@ -224,5 +225,10 @@ class Poor:
         pass
 
     def update(self):
+        self.gen_timer += game_framework.frame_time
+        if self.gen_timer >= 30.0:
+            poor = [Poor(self.king, self.shop_hammer, self.shop_bow) for i in range(2)]
+            game_world.add_objects(poor, 1)
+            self.gen_timer = 0
         self.state_machine.update()
         pass

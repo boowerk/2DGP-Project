@@ -107,6 +107,13 @@ class Walk:
 
     @staticmethod
     def do(king):
+        if king.x < -160:
+            king.x = -160
+            king.x -= king.dir * RUN_SPEED_PPS * game_framework.frame_time
+        elif king.x > 2640:  # 화면 오른쪽 경계
+            king.x = 2640
+            king.x -= king.dir * RUN_SPEED_PPS * game_framework.frame_time
+
         if king.x > 600 + king.camera_x:
             king.camera_x = king.x - 600
             king.x += king.dir * RUN_SPEED_PPS * game_framework.frame_time

@@ -21,6 +21,9 @@ def find_enemy_event(e):
 def attack_event(e):
     return e[0] == 'ATTACK'
 
+def die_event(e):
+    return e[0] == 'DIE'
+
 def miss_event(e):
     return e[0] == 'MISS'
 

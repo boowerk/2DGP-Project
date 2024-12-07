@@ -7,7 +7,7 @@ import game_world
 import shop_hammer
 from coin import Coin
 from game_world import remove_object
-from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_wall_event
+from state_machine import StateMachine, time_out, random_event, find_coin_event, miss_event, find_wall_event, die_event
 from wall import Wall
 
 # troll Run Speed
@@ -46,6 +46,9 @@ class Walk:
         if troll.frame_timer >= 0.1:
             troll.frame = (troll.frame + 1) % 6
             troll.frame_timer = 0
+
+        if troll.hp <= 0:
+            troll.state_machine.add_event(('DIE', 0))
 
         pass
 
@@ -90,6 +93,9 @@ class Attack:
             troll.frame = (troll.frame + 1) % 4
             troll.frame_timer = 0
 
+        if troll.hp <= 0:
+            troll.state_machine.add_event(('DIE', 0))
+
         pass
 
     @staticmethod
@@ -119,6 +125,9 @@ class Die:
         if troll.frame_timer >= 0.1:
             troll.frame = (troll.frame + 1) % 8
             troll.frame_timer = 0
+            if troll.frame == 7:
+                game_world.remove_collision_object(troll)
+                game_world.remove_object(troll)  # 객체 삭제
         pass
 
     @staticmethod
@@ -150,8 +159,8 @@ class Troll:
         self.state_machine.start(Walk)
         self.state_machine.set_transitions(
             {
-                Walk: {find_wall_event: Attack},
-                Attack : {miss_event: Walk},
+                Walk: {find_wall_event: Attack, die_event: Die},
+                Attack : {miss_event: Walk, die_event: Die},
                 Die : {}
             }
         )
@@ -171,8 +180,7 @@ class Troll:
                 self.damaged_timer = 0
 
         if self.hp <= 0:
-            game_world.remove_collision_object(self)
-            game_world.remove_object(self)  # 객체 삭제
+            self.state_machine.add_event(('DIE', 0))
 
         pass
 
@@ -187,6 +195,5 @@ class Troll:
                 self.hp -= 1
             if self.hp <= 0:
                 print(f"Troll at ({self.x}, {self.y}) is dead!")
-                game_world.remove_collision_object(self)
-                game_world.remove_object(self)
+                self.state_machine.add_event(('DIE', 0))
             print(f"Troll at ({self.x}, {self.y}) HP: {self.hp}")

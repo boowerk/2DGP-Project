@@ -159,7 +159,7 @@ class King:
             King.drop_coin_sound = load_wav('coin_drophitground.wav')
             King.drop_coin_sound.set_volume(32)
 
-        self.x, self.y = 2300, 356
+        self.x, self.y = 600, 356
         self.dir = 0
         self.last_dir = 1
         self.coin_count = 100

@@ -20,6 +20,7 @@ class Arrow:
         # 플래그가 설정된 경우 삭제
         if self.to_remove:
             game_world.remove_object(self)
+            game_world.remove_collision_object(self)
 
     def get_bb(self):
         # 충돌 박스 좌표 반환
@@ -30,6 +31,7 @@ class Arrow:
         draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
-        if group == 'troll:arrow':
-            self.to_remove = True
-            pass
+        if group == 'troll:arrow' and not self.to_remove:
+            self.to_remove = True  # 충돌 플래그 설정
+            game_world.remove_object(self)
+            game_world.remove_collision_object(self)

@@ -1,5 +1,4 @@
 from pico2d import *
-from pygame.cursors import arrow
 from sdl2 import SDL_QUIT, SDL_KEYDOWN, SDLK_ESCAPE, SDL_KEYUP
 
 import game_framework

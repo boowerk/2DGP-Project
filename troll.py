@@ -140,6 +140,8 @@ class Troll:
         self.frame_timer = 0
         self.attack_timer = 0
         self.king = king
+        self.damaged = False
+        self.damaged_timer = 0
         self.hp = 3
         self.attack_image = load_image('troll_charge.png')
         self.walk_image = load_image('troll_walk.png')
@@ -162,7 +164,14 @@ class Troll:
     def update(self):
         self.state_machine.update()
 
+        if self.damaged and self.hp > 0:
+            self.damaged_timer += game_framework.frame_time
+            if self.damaged_timer > 0.5:  # 0.5초 후에 다시 충돌 가능
+                self.damaged = False
+                self.damaged_timer = 0
+
         if self.hp <= 0:
+            game_world.remove_collision_object(self)
             game_world.remove_object(self)  # 객체 삭제
 
         pass
@@ -172,9 +181,12 @@ class Troll:
         return self.x - self.king.camera_x - 20, self.y - 50, self.x - self.king.camera_x + 20, self.y + 20
 
     def handle_collision(self, group, other):
-        if group == 'troll:arrow':
+        if group == 'troll:arrow' and not self.damaged:
+            self.damaged = True  # 이미 충돌된 상태로 표시
             if self.hp > 0:  # hp가 0 이상일 때만 감소
                 self.hp -= 1
             if self.hp <= 0:
                 print("Troll is dead!")
-        print(f"Troll HP: {self.hp}")  # 디버깅 출력
+                game_world.remove_collision_object(self)
+                game_world.remove_object(self)
+            print(f"Troll HP: {self.hp}")  # 디버깅 출력

@@ -46,16 +46,17 @@ def init():
     map = [Map(king) for i in range(11)]
     game_world.add_objects(map, 1)
 
-    background = Background(king)
+    kingdom = Kingdom(king)
+    shop_hammer = Shop_hammer(king, kingdom)
+    shop_bow = Shop_bow(king, kingdom)
+
+    background = Background(king,shop_hammer, shop_bow)
     game_world.add_object(background, 0)
 
-    kingdom = Kingdom(king)
     game_world.add_object(kingdom, 0)
 
-    shop_hammer = Shop_hammer(king, kingdom)
     game_world.add_object(shop_hammer)
 
-    shop_bow = Shop_bow(king, kingdom)
     game_world.add_object(shop_bow)
 
     poor = [Poor(king, shop_hammer, shop_bow) for i in range(2)]

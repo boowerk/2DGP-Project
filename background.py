@@ -1,5 +1,9 @@
 from pico2d import load_image, load_music
 
+import game_framework
+import game_world
+from poor import Poor
+
 
 class Background:
     hills = None
@@ -8,7 +12,10 @@ class Background:
     sky = None
     music = None
 
-    def __init__(self, king):
+    def __init__(self, king, shop_hammer, shop_bow):
+        self.gen_timer = 0
+        self.shop_hammer = shop_hammer
+        self.shop_bow = shop_bow
         if Background.hills is None:
             Background.hills = load_image("backdrop_hills.png")
 
@@ -55,4 +62,10 @@ class Background:
         self.hills.draw(-hills_offset + 200, self.hills_y, self.image_width, 328)
 
     def update(self):
+        self.gen_timer += game_framework.frame_time
+
+        if self.gen_timer >= 60.0:
+            poor = Poor(self.king, self.shop_hammer, self.shop_bow)
+            game_world.add_object(poor, 1)
+            self.gen_timer = 0
         pass

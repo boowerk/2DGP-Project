@@ -148,7 +148,7 @@ class Walk:
                 archer.state_machine.add_event(('FIND_ENEMY', 0))
 
         if archer.x < 600:  # 화면 왼쪽 경계
-            archer.x = 900
+            archer.x = 600
             archer.dir = 1
         elif archer.x > 2100:  # 화면 오른쪽 경계
             archer.x = 2100

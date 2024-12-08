@@ -70,7 +70,7 @@ class Wall:
         self.attacked_timer += game_framework.frame_time
         if self.attacked_timer > 10.0:
             self.attacked = False
-            self.hp = self.level + 1
+            self.hp = self.level
             self.attacked_timer = 0
 
         if len(coins_in_area) == 1 and not self.level == 4:

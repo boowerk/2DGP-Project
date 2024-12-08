@@ -152,6 +152,7 @@ class Die:
                 boss.frame = 0
                 if boss.col == 0:
                     boss.drop_coin()
+                    boss.drop_coin()
                     game_world.remove_collision_object(boss)
                     game_world.remove_object(boss)  # 객체 삭제
         pass

@@ -226,9 +226,9 @@ class Poor:
 
     def update(self):
         self.gen_timer += game_framework.frame_time
-        if self.gen_timer >= 30.0:
-            poor = [Poor(self.king, self.shop_hammer, self.shop_bow) for i in range(2)]
-            game_world.add_objects(poor, 1)
+        if self.gen_timer >= 60.0:
+            poor = Poor(self.king, self.shop_hammer, self.shop_bow)
+            game_world.add_object(poor, 1)
             self.gen_timer = 0
         self.state_machine.update()
         pass

@@ -127,6 +127,7 @@ class Die:
             troll.frame_timer = 0
             if troll.frame == 7:
                 troll.drop_coin()
+                troll.drop_coin()
                 game_world.remove_collision_object(troll)
                 game_world.remove_object(troll)  # 객체 삭제
         pass

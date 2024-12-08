@@ -184,7 +184,7 @@ class King:
         self.x, self.y = 300, 356
         self.dir = 0
         self.last_dir = 1
-        self.coin_count = 5
+        self.coin_count = 6
         self.frame = 8  # 정지 상태
         self.frame_step = 1 # 프레임의 증가 또는 감소
         self.frame_delay = 2.0  # 프레임 전환 간격
